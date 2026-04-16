@@ -50,7 +50,7 @@ I18n.register('tr', {
   'solver.status': 'İpuçlarını girin ve "Çözümü başlat" düğmesine basın',
   'solver.hintLabel.row': 'Satır {{n}} ipuçları:',
   'solver.hintLabel.col': 'Sütun {{n}} ipuçları:',
-  'solver.hintPlaceholder': 'Sayı girin (ör: 3 → [3] ekle, 0 → sonraki, . → sil)',
+  'solver.hintHelp': '1-2 hane→ekle  3+ hane→böl  [.]sonu sil  [..]tümünü temizle  [0]sonraki  [↑↓]hareket',
   'solver.solvingStatus': 'Çözülüyor...',
 
   // ── Oluşturucu Sekmesi ──

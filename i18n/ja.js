@@ -50,7 +50,7 @@ I18n.register('ja', {
   'solver.status': '問題のヒントを入力して「解答実行」を押してください',
   'solver.hintLabel.row': '行 {{n}} のヒント:',
   'solver.hintLabel.col': '列 {{n}} のヒント:',
-  'solver.hintPlaceholder': '数字を入力（例: 3 → [3]追加、0 → 次へ、. → 削除）',
+  'solver.hintHelp': '1-2桁数字→単体追加  3桁以上数字→分解  [.]末尾削除  [..]全クリア  [0]次へ  [↑↓]移動',
   'solver.solvingStatus': '解答中...',
 
   // ── 問題作成タブ ──

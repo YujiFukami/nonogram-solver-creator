@@ -50,7 +50,7 @@ I18n.register('zh-TW', {
   'solver.status': '請輸入謎題提示數字，然後點擊「開始解答」',
   'solver.hintLabel.row': '第 {{n}} 列提示:',
   'solver.hintLabel.col': '第 {{n}} 欄提示:',
-  'solver.hintPlaceholder': '輸入數字（例: 3 → 新增[3]、0 → 下一個、. → 刪除）',
+  'solver.hintHelp': '1-2位數字→直接新增  3位以上→分解  [.]刪除末尾  [..]全部清除  [0]下一個  [↑↓]移動',
   'solver.solvingStatus': '解答中...',
 
   // ── 出題分頁 ──

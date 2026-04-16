@@ -50,7 +50,7 @@ I18n.register('zh-CN', {
   'solver.status': '请输入谜题提示数字，然后点击"开始解答"',
   'solver.hintLabel.row': '第 {{n}} 行提示:',
   'solver.hintLabel.col': '第 {{n}} 列提示:',
-  'solver.hintPlaceholder': '输入数字（例: 3 → 添加[3]、0 → 下一个、. → 删除）',
+  'solver.hintHelp': '1-2位数字→直接添加  3位以上→分解  [.]删除末尾  [..]全部清除  [0]下一个  [↑↓]移动',
   'solver.solvingStatus': '解答中...',
 
   // ── 出题选项卡 ──

@@ -189,9 +189,8 @@
       <!-- ヒント入力パネル（グリッド上部に配置） -->
       <div id="hint-input-panel">
         <span id="hint-input-label">行 1 のヒント:</span>
-        <input type="text" id="hint-input-field" autocomplete="off" spellcheck="false"
-               data-i18n-placeholder="solver.hintPlaceholder"
-               placeholder="数字を入力（例: 3 → [3]追加、0 → 次へ、. → 削除）">
+        <input type="text" id="hint-input-field" autocomplete="off" spellcheck="false">
+        <span id="hint-input-help" class="hint-input-help" data-i18n="solver.hintHelp">1-2桁数字→単体追加  3桁以上数字→分解  [.]末尾削除  [..]全クリア  [0]次へ  [↑↓]移動</span>
         <span id="hint-input-current"></span>
       </div>
 

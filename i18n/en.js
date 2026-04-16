@@ -50,7 +50,7 @@ I18n.register('en', {
   'solver.status': 'Enter puzzle hints and press "Solve" to start',
   'solver.hintLabel.row': 'Row {{n}} hints:',
   'solver.hintLabel.col': 'Col {{n}} hints:',
-  'solver.hintPlaceholder': 'Enter numbers (e.g. 3 → add [3], 0 → next, . → delete)',
+  'solver.hintHelp': '1-2 digits→add as is  3+ digits→split  [.]pop last  [..]clear all  [0]next  [↑↓]move',
   'solver.solvingStatus': 'Solving...',
 
   // ── Creator Tab ──

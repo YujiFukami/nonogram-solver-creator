@@ -50,7 +50,7 @@ I18n.register('pl', {
   'solver.status': 'Wpisz wskazówki i naciśnij "Uruchom"',
   'solver.hintLabel.row': 'Wskazówki wiersza {{n}}:',
   'solver.hintLabel.col': 'Wskazówki kolumny {{n}}:',
-  'solver.hintPlaceholder': 'Wpisz liczbę (np.: 3 → dodaj [3], 0 → dalej, . → usuń)',
+  'solver.hintHelp': '1-2 cyfry→dodaj  3+ cyfry→podziel  [.]usuń ostatnie  [..]wyczyść  [0]dalej  [↑↓]przesuń',
   'solver.solvingStatus': 'Rozwiązywanie...',
 
   // ── Zakładka Kreator ──

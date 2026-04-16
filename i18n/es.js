@@ -50,7 +50,7 @@ I18n.register('es', {
   'solver.status': 'Introduce las pistas y pulsa "Ejecutar"',
   'solver.hintLabel.row': 'Pistas de la fila {{n}}:',
   'solver.hintLabel.col': 'Pistas de la columna {{n}}:',
-  'solver.hintPlaceholder': 'Introduce un número (ej: 3 → añadir [3], 0 → siguiente, . → eliminar)',
+  'solver.hintHelp': '1-2 dígitos→añadir  3+ dígitos→dividir  [.]eliminar último  [..]borrar todo  [0]siguiente  [↑↓]mover',
   'solver.solvingStatus': 'Resolviendo...',
 
   // ── Pestaña Crear ──

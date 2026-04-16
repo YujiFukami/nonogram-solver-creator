@@ -50,7 +50,7 @@ I18n.register('ko', {
   'solver.status': '힌트를 입력하고 "풀이 실행"을 눌러주세요',
   'solver.hintLabel.row': '행 {{n}} 힌트:',
   'solver.hintLabel.col': '열 {{n}} 힌트:',
-  'solver.hintPlaceholder': '숫자 입력 (예: 3 → [3] 추가, 0 → 다음, . → 삭제)',
+  'solver.hintHelp': '1-2자리→그대로 추가  3자리 이상→분해  [.]마지막 삭제  [..]전체 삭제  [0]다음  [↑↓]이동',
   'solver.solvingStatus': '풀이 중...',
 
   // ── 퍼즐 만들기 탭 ──

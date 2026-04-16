@@ -50,7 +50,7 @@ I18n.register('it', {
   'solver.status': 'Inserisci gli indizi del puzzle e clicca su « Risolvi »',
   'solver.hintLabel.row': 'Indizi riga {{n}}:',
   'solver.hintLabel.col': 'Indizi colonna {{n}}:',
-  'solver.hintPlaceholder': 'Inserisci un numero (es: 3 → aggiunge [3], 0 → avanti, . → elimina)',
+  'solver.hintHelp': '1-2 cifre→aggiungi  3+ cifre→dividi  [.]rimuovi ultimo  [..]cancella tutto  [0]avanti  [↑↓]sposta',
   'solver.solvingStatus': 'Risoluzione in corso...',
 
   // ── Scheda Creatore ──

@@ -50,7 +50,7 @@ I18n.register('de', {
   'solver.status': 'Geben Sie die Hinweise ein und klicken Sie auf « Lösen »',
   'solver.hintLabel.row': 'Hinweise Zeile {{n}}:',
   'solver.hintLabel.col': 'Hinweise Spalte {{n}}:',
-  'solver.hintPlaceholder': 'Zahl eingeben (z.B.: 3 → [3] hinzufügen, 0 → weiter, . → entfernen)',
+  'solver.hintHelp': '1-2 Ziffern→hinzufügen  3+ Ziffern→aufteilen  [.]letztes entfernen  [..]alles löschen  [0]weiter  [↑↓]bewegen',
   'solver.solvingStatus': 'Wird gelöst...',
 
   // ── Tab Ersteller ──

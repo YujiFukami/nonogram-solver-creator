@@ -491,6 +491,18 @@ button:disabled { opacity: .45; cursor: default; }
   color: var(--color-muted);
   white-space: nowrap;
 }
+.hint-input-help {
+  font-size: 11px;
+  color: var(--color-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .hint-input-help { display: none; }
+}
 
 /* ── 行ヒント（グリッド左側） ────────────────────────────── */
 #row-hints-area {
