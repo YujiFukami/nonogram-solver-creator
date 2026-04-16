@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="4" fill="#2563eb"/>
+  <!-- Grid 4x4 -->
+  <!-- Row 1 -->
+  <rect x="3" y="3" width="6" height="6" fill="#fff"/>
+  <rect x="10" y="3" width="6" height="6" fill="#1a1a1a"/>
+  <rect x="17" y="3" width="6" height="6" fill="#1a1a1a"/>
+  <rect x="24" y="3" width="5" height="6" fill="#fff"/>
+  <!-- Row 2 -->
+  <rect x="3" y="10" width="6" height="6" fill="#1a1a1a"/>
+  <rect x="10" y="10" width="6" height="6" fill="#fff"/>
+  <rect x="17" y="10" width="6" height="6" fill="#fff"/>
+  <rect x="24" y="10" width="5" height="6" fill="#1a1a1a"/>
+  <!-- Row 3 -->
+  <rect x="3" y="17" width="6" height="6" fill="#1a1a1a"/>
+  <rect x="10" y="17" width="6" height="6" fill="#fff"/>
+  <rect x="17" y="17" width="6" height="6" fill="#fff"/>
+  <rect x="24" y="17" width="5" height="6" fill="#1a1a1a"/>
+  <!-- Row 4 -->
+  <rect x="3" y="24" width="6" height="5" fill="#fff"/>
+  <rect x="10" y="24" width="6" height="5" fill="#1a1a1a"/>
+  <rect x="17" y="24" width="6" height="5" fill="#1a1a1a"/>
+  <rect x="24" y="24" width="5" height="5" fill="#fff"/>
+  <!-- Grid lines -->
+  <line x1="9.5" y1="3" x2="9.5" y2="29" stroke="#2563eb" stroke-width="0.5"/>
+  <line x1="16.5" y1="3" x2="16.5" y2="29" stroke="#2563eb" stroke-width="0.5"/>
+  <line x1="23.5" y1="3" x2="23.5" y2="29" stroke="#2563eb" stroke-width="0.5"/>
+  <line x1="3" y1="9.5" x2="29" y2="9.5" stroke="#2563eb" stroke-width="0.5"/>
+  <line x1="3" y1="16.5" x2="29" y2="16.5" stroke="#2563eb" stroke-width="0.5"/>
+  <line x1="3" y1="23.5" x2="29" y2="23.5" stroke="#2563eb" stroke-width="0.5"/>
+</svg>
