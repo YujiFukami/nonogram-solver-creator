@@ -4,7 +4,9 @@
 
 Free online nonogram (picross / griddlers / hanjie) solver and puzzle creator with step-by-step visualization.
 
-[![GitHub Pages](https://img.shields.io/badge/demo-GitHub%20Pages-blue)](https://yujifukami.github.io/nonogram-solver-creator/)
+[![Live Demo](https://img.shields.io/badge/demo-Live%20App-blue)](https://nonogram-solver-creator.vercel.app/)
+
+**🌐 Web App: https://nonogram-solver-creator.vercel.app/**
 
 ---
 
