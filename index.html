@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イラストロジック 自動解答・作成 | Nonogram Solver</title>
+
+  <!-- SEO メタタグ -->
+  <meta name="description" content="お絵かきロジック（イラストロジック・ピクロス・ノノグラム）の自動解答＆問題作成ツール。Nonogram / Picross / Griddlers solver and puzzle creator with step-by-step visualization.">
+  <meta name="keywords" content="nonogram,picross,griddlers,hanjie,お絵かきロジック,イラストロジック,ピクロス,ノノグラム,paint by numbers,Japanese crossword,solver,creator,ロジックアート,nemo logic,crucipixel,logimage,japonský křížovky,japanisches rätsel">
+  <meta name="author" content="Nonogram Solver">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Nonogram Solver & Creator | お絵かきロジック自動解答">
+  <meta property="og:description" content="Free online nonogram (picross/griddlers) solver and puzzle creator. お絵かきロジック・イラストロジック自動解答＆作成ツール。">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <meta property="og:locale:alternate" content="zh_TW">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="pl_PL">
+
+  <!-- 構造化データ (WebApplication) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Nonogram Solver & Creator",
+    "alternateName": ["イラストロジック自動解答", "お絵かきロジック ソルバー", "Picross Solver", "Griddlers Solver", "Hanjie Solver", "ピクロス ソルバー", "ノノグラム 解答"],
+    "description": "Free online nonogram solver and puzzle creator with step-by-step visualization, image-to-puzzle conversion, and QR code puzzle generation.",
+    "applicationCategory": "Game, Puzzle, Utility",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "inLanguage": ["ja","en","ru","ko","fr","it","de","es","tr","zh-CN","zh-TW","pl"],
+    "browserRequirements": "Requires JavaScript"
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="creator/creator.css">
+  <link rel="stylesheet" href="qr/qr-creator.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ヘッダー -->
+  <header id="header">
+    <h1 data-i18n="app.title">イラストロジック 自動解答</h1>
+    <div id="header-right">
+      <select id="lang-select" title="Language / 言語"></select>
+      <div id="solve-rate-display"><span data-i18n="app.solveRate">解決率:</span> 0%</div>
+    </div>
+  </header>
+
+  <!-- プログレスバー -->
+  <div id="progress-bar-wrap">
+    <div id="progress-bar"></div>
+  </div>
+
+  <!-- タブナビゲーション -->
+  <nav id="tab-nav">
+    <button class="tab-btn active" data-tab="solver" data-i18n="tab.solver">解答</button>
+    <button class="tab-btn" data-tab="creator" data-i18n="tab.creator">問題作成</button>
+    <button class="tab-btn" data-tab="qr" data-i18n="tab.qr">QRコード</button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- タブ: 解答                                             -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="tab-solver" class="tab-content active">
+
+    <!-- 左パネル -->
+    <aside id="side-panel">
+
+      <!-- サイズ設定 -->
+      <section class="panel-section">
+        <h3 data-i18n="solver.size">サイズ設定</h3>
+        <div class="size-inline">
+          <label for="input-rows" data-i18n="common.rows">縦</label>
+          <input type="number" id="input-rows" value="15" min="1" max="300">
+          <label for="input-cols" data-i18n="common.cols">横</label>
+          <input type="number" id="input-cols" value="15" min="1" max="300">
+          <button class="btn-secondary btn-apply" id="btn-apply-size" data-i18n="common.apply">適用</button>
+        </div>
+      </section>
+
+      <!-- ファイル -->
+      <section class="panel-section">
+        <h3 data-i18n="solver.file">📁 ファイル</h3>
+        <input type="file" id="file-input" accept=".txt,.json">
+        <div class="btn-grid-2">
+          <button class="btn-file" id="btn-load" data-i18n="solver.load">📂 読込</button>
+          <button class="btn-file" id="btn-save" data-i18n="solver.save">💾 保存</button>
+        </div>
+        <button class="btn-file" id="btn-save-image" data-i18n="solver.saveImage">🖼 画像として保存</button>
+        <label style="font-size:11px;display:flex;align-items:center;gap:5px;margin-top:3px;cursor:pointer;">
+          <input type="checkbox" id="chk-save-with-hints"> <span data-i18n="solver.saveWithHints">ヒント数字を含む</span>
+        </label>
+      </section>
+
+      <!-- 解答操作 -->
+      <section class="panel-section">
+        <h3 data-i18n="solver.solving">🧩 解答</h3>
+        <button class="btn-primary" id="btn-solve" data-i18n="solver.run">▶ 解答実行</button>
+        <div class="btn-grid-2">
+          <button class="btn-secondary" id="btn-step" data-i18n="solver.step">⏯ ステップ</button>
+          <button class="btn-secondary" id="btn-auto-step" data-i18n="solver.auto">⏩ 自動 ▶</button>
+        </div>
+        <div class="speed-row">
+          <label for="step-interval">⏱</label>
+          <input type="number" id="step-interval" value="200" min="50" max="5000" step="50">
+          <span data-i18n="common.ms">ms</span>
+        </div>
+      </section>
+
+      <!-- リセット -->
+      <section class="panel-section">
+        <h3 data-i18n="solver.reset">🔄 リセット</h3>
+        <div class="btn-grid-2">
+          <button class="btn-warning" id="btn-reset-grid" data-i18n="solver.resetGrid">↺ リセット</button>
+          <button class="btn-danger"  id="btn-clear-all" data-i18n="solver.clearAll">🗑 全クリア</button>
+        </div>
+      </section>
+
+      <!-- マス色設定 -->
+      <section class="panel-section">
+        <h3 data-i18n="solver.cellColor">🎨 マス色</h3>
+        <div class="color-compact">
+          <div class="color-compact-item">
+            <input type="color" id="color-unknown" value="#f0f0f0">
+            <span data-i18n="solver.unknown">未確定</span>
+          </div>
+          <div class="color-compact-item">
+            <input type="color" id="color-black" value="#1a1a1a">
+            <span data-i18n="solver.black">黒マス</span>
+          </div>
+          <div class="color-compact-item">
+            <input type="color" id="color-white" value="#b2ebf2">
+            <span data-i18n="solver.white">白マス</span>
+          </div>
+        </div>
+        <button class="btn-secondary" id="btn-reset-colors" style="font-size:11px;padding:4px;" data-i18n="solver.colorReset">🔁 色リセット</button>
+      </section>
+
+      <!-- ズーム -->
+      <section class="panel-section">
+        <h3 data-i18n="solver.zoom">🔍 ズーム</h3>
+        <div class="zoom-row">
+          <button class="btn-secondary" id="btn-zoom-in" data-i18n-title="solver.zoomInTitle">＋</button>
+          <button class="btn-secondary" id="btn-zoom-out" data-i18n-title="solver.zoomOutTitle">－</button>
+          <button class="btn-primary"   id="btn-zoom-fit" data-i18n-title="solver.zoomFitTitle" data-i18n="solver.zoomFit">⤢ 自動</button>
+        </div>
+        <div id="cell-size-display" style="text-align:center;color:var(--color-muted);font-size:11px;">
+          セルサイズ: 24px
+        </div>
+      </section>
+
+      <!-- ステータス -->
+      <section class="panel-section">
+        <div id="status-message" data-i18n="solver.status">問題のヒントを入力してください</div>
+      </section>
+
+    </aside>
+
+    <!-- パズルエリア -->
+    <div id="puzzle-area">
+
+      <!-- ヒント入力パネル（グリッド上部に配置） -->
+      <div id="hint-input-panel">
+        <span id="hint-input-label">行 1 のヒント:</span>
+        <input type="text" id="hint-input-field" autocomplete="off" spellcheck="false"
+               data-i18n-placeholder="solver.hintPlaceholder"
+               placeholder="数字を入力（例: 3 → [3]追加、0 → 次へ、. → 削除）">
+        <span id="hint-input-current"></span>
+      </div>
+
+      <div id="puzzle-scroll">
+        <div id="puzzle-layout">
+          <div id="corner"></div>
+          <div id="col-hints-area"></div>
+          <div id="row-hints-area"></div>
+          <div id="grid-wrap">
+            <canvas id="grid-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- #tab-solver -->
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- タブ: 問題作成                                         -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="tab-creator" class="tab-content">
+    <div id="creator-layout">
+
+      <!-- 左パネル: コントロール -->
+      <aside id="creator-panel">
+
+        <!-- 画像 -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.image">📷 画像</h3>
+          <input type="file" id="cr-file-input" accept="image/*" style="display:none">
+          <button class="btn-file" id="cr-btn-import" data-i18n="creator.import">📂 画像を選択</button>
+          <span id="cr-file-name" data-i18n="creator.noFile">未選択</span>
+        </section>
+
+        <!-- 変換 -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.conversion">🎚 変換</h3>
+          <div class="cr-mode-tabs">
+            <label class="cr-mode-btn"><input type="radio" name="cr-mode" value="threshold" checked><span data-i18n="creator.threshold">閾値</span></label>
+            <label class="cr-mode-btn"><input type="radio" name="cr-mode" value="adaptive"><span data-i18n="creator.adaptive">適応</span></label>
+            <label class="cr-mode-btn"><input type="radio" name="cr-mode" value="dither"><span data-i18n="creator.dither">ディザ</span></label>
+            <label class="cr-mode-btn"><input type="radio" name="cr-mode" value="outline"><span data-i18n="creator.outline">輪郭</span></label>
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="creator.threshold">閾値</span> <span id="cr-threshold-val">128</span></label>
+            <input type="range" id="cr-threshold" min="0" max="255" value="128">
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="creator.brightness">明るさ</span> <span id="cr-brightness-val">0</span></label>
+            <input type="range" id="cr-brightness" min="-100" max="100" value="0">
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="creator.contrast">コントラスト</span> <span id="cr-contrast-val">0</span></label>
+            <input type="range" id="cr-contrast" min="-100" max="100" value="0">
+          </div>
+          <div class="slider-row" id="cr-edge-boost-row">
+            <label><span data-i18n="creator.edgeBoost">エッジ強調</span> <span id="cr-edge-boost-val">0</span></label>
+            <input type="range" id="cr-edge-boost" min="0" max="100" value="0">
+          </div>
+        </section>
+
+        <!-- グリッド -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.grid">📐 グリッド</h3>
+          <div class="size-inline">
+            <label for="cr-cols" data-i18n="common.cols">横</label>
+            <input type="number" id="cr-cols" value="30" min="1" max="500">
+            <label for="cr-rows" data-i18n="common.rows">縦</label>
+            <input type="number" id="cr-rows" value="20" min="1" max="500">
+          </div>
+          <div class="check-row">
+            <input type="checkbox" id="cr-auto-rows" checked>
+            <label for="cr-auto-rows" data-i18n="creator.autoRows">縦を自動</label>
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="creator.cellSize">セルサイズ</span> <span id="cr-zoom-val">--</span></label>
+            <input type="range" id="cr-zoom" min="1" max="40" value="8" step="1">
+          </div>
+        </section>
+
+        <!-- 後処理 -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.postProcess">🔧 後処理</h3>
+          <div class="slider-row">
+            <label><span data-i18n="creator.closing">閉包</span> <span id="cr-closing-val">0</span></label>
+            <input type="range" id="cr-closing" min="0" max="3" value="0" step="1">
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="creator.isolate">孤立除去</span> <span id="cr-isolate-val">0</span></label>
+            <input type="range" id="cr-isolate" min="0" max="4" value="0" step="1">
+          </div>
+          <div class="slider-row">
+            <label><span data-i18n="creator.minBlob">最小塊</span> <span id="cr-min-blob-val">0</span></label>
+            <input type="range" id="cr-min-blob" min="0" max="30" value="0" step="1">
+          </div>
+        </section>
+
+        <!-- 表示・編集 -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.display">👁 表示・編集</h3>
+          <div class="slider-row">
+            <label><span data-i18n="creator.overlay">参照オーバーレイ</span> <span id="cr-overlay-val">0</span>%</label>
+            <input type="range" id="cr-overlay-opacity" min="0" max="80" value="0" step="5">
+          </div>
+          <div class="check-row">
+            <input type="checkbox" id="cr-show-hints" checked>
+            <label for="cr-show-hints" data-i18n="creator.showHints">ヒント表示</label>
+          </div>
+          <div class="cr-brush-row">
+            <span data-i18n="creator.brush">ブラシ</span>
+            <div class="btn-grid-4">
+              <button class="btn-secondary cr-brush-btn active" data-size="1">1px</button>
+              <button class="btn-secondary cr-brush-btn" data-size="3">3px</button>
+              <button class="btn-secondary cr-brush-btn" data-size="5">5px</button>
+              <button class="btn-secondary cr-brush-btn" data-size="7">7px</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 検証 -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.validate">✅ 検証</h3>
+          <div class="validate-row">
+            <button class="btn-secondary" id="cr-btn-validate" data-i18n="creator.validateBtn">解の検証</button>
+            <button class="btn-danger" id="cr-btn-validate-cancel"
+                    style="display:none;padding:2px 6px;font-size:11px;" data-i18n="common.cancel">✕ 中止</button>
+            <input type="color" id="cr-validate-color" value="#ff6600" title="未解決マスの着色">
+          </div>
+          <div id="cr-validate-progress" style="display:none;margin:4px 0 2px;">
+            <div style="background:#e0e0e0;border-radius:3px;height:6px;overflow:hidden;">
+              <div id="cr-validate-bar"
+                   style="background:var(--color-primary);height:100%;width:0%;transition:width 0.15s;"></div>
+            </div>
+            <div id="cr-validate-pct"
+                 style="font-size:10px;color:var(--color-muted);margin-top:1px;text-align:right;">0%</div>
+          </div>
+          <div id="cr-validate-result"></div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
+            <button class="btn-secondary" id="cr-btn-fill-unsolved" disabled
+                    style="font-size:10px;padding:3px 8px;flex:1;" data-i18n="creator.fillUnsolved">
+              🎲 境界黒マス追加
+            </button>
+            <input type="number" id="cr-fill-pct" value="20" min="0" max="50"
+                   style="width:38px;padding:2px 4px;font-size:11px;border:1px solid var(--color-border);border-radius:3px;">
+            <span style="font-size:10px;color:var(--color-muted)" data-i18n="common.percent">%</span>
+          </div>
+        </section>
+
+        <!-- 出力 -->
+        <section class="panel-section">
+          <h3 data-i18n="creator.output">📤 出力</h3>
+          <input type="text" id="cr-puzzle-name" value="nonogram" data-i18n-placeholder="creator.puzzleName" placeholder="問題名">
+          <button class="btn-primary" id="cr-btn-transfer" data-i18n="creator.transfer">➡ 解答タブへ渡す</button>
+          <div class="btn-grid-2">
+            <button class="btn-file" id="cr-btn-save" data-i18n="creator.saveTxt">💾 .txt</button>
+            <button class="btn-secondary" id="cr-btn-reset" data-i18n="creator.regenerate">↺ 再生成</button>
+          </div>
+          <input type="file" id="cr-project-input" accept=".ncp.json,.json" style="display:none">
+          <div class="btn-grid-2">
+            <button class="btn-warning" id="cr-btn-project-save" data-i18n="creator.projectSave">📦 保存</button>
+            <button class="btn-warning" id="cr-btn-project-load" data-i18n="creator.projectLoad">📂 読込</button>
+          </div>
+          <button class="btn-secondary" id="cr-btn-print" data-i18n="creator.print">🖨 印刷用PDF</button>
+        </section>
+
+      </aside>
+
+      <!-- メインエリア -->
+      <div id="creator-main">
+
+        <!-- プレビュー表示/非表示トグル -->
+        <div id="cr-preview-toolbar">
+          <button class="btn-secondary" id="cr-btn-toggle-preview" data-i18n="creator.hidePreview">▲ 隠す</button>
+        </div>
+
+        <!-- プレビューエリア（ドロップゾーン兼用） -->
+        <div id="cr-drop-zone">
+          <div id="cr-drop-hint" data-i18n="creator.dropHint">ここに画像をドロップするか「画像を選択」を押してください</div>
+
+          <div id="cr-preview-row" style="display:none">
+            <div class="cr-preview-box">
+              <div class="cr-preview-label" data-i18n="creator.origLabel">元画像（トリミング枠）</div>
+              <div class="cr-canvas-wrap">
+                <canvas id="cr-orig-canvas"></canvas>
+                <canvas id="cr-crop-canvas"></canvas>
+              </div>
+            </div>
+            <div class="cr-preview-box">
+              <div class="cr-preview-label" data-i18n="creator.bwLabel">白黒プレビュー（グリッド）</div>
+              <div class="cr-canvas-wrap">
+                <canvas id="cr-bw-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- リサイズハンドル -->
+        <div id="cr-resize-handle"></div>
+
+        <!-- 生成されたノノグラムグリッド -->
+        <div id="cr-grid-section">
+          <div id="cr-grid-toolbar">
+            <span class="cr-preview-label" data-i18n="creator.gridLabel">生成された問題（クリック/ドラッグで黒↔白切替）</span>
+            <button class="btn-secondary cr-zoom-mode-btn" id="cr-btn-zoom-mode" data-i18n="creator.zoomMode">🔍 ズーム</button>
+          </div>
+          <div id="cr-grid-wrap"></div>
+        </div>
+
+      </div><!-- #creator-main -->
+    </div><!-- #creator-layout -->
+  </div><!-- #tab-creator -->
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- タブ: QRコード                                         -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="tab-qr" class="tab-content">
+    <div id="qr-layout">
+
+      <!-- 左パネル -->
+      <aside id="qr-panel">
+
+        <section class="panel-section">
+          <h3 data-i18n="qr.urlInput">URL入力</h3>
+          <div id="qr-url-wrap">
+            <input type="text" id="qr-url-input" data-i18n-placeholder="qr.urlPlaceholder" placeholder="https://example.com" autocomplete="off">
+            <button class="btn-primary" id="qr-generate-btn" data-i18n="qr.generate">QR生成</button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <h3 data-i18n="qr.ecLevel">誤り訂正レベル</h3>
+          <div class="qr-ec-row">
+            <label><input type="radio" name="qr-ec" value="L"> L</label>
+            <label><input type="radio" name="qr-ec" value="M" checked> M</label>
+            <label><input type="radio" name="qr-ec" value="Q"> Q</label>
+            <label><input type="radio" name="qr-ec" value="H"> H</label>
+          </div>
+          <div class="slider-help" style="padding:0 8px; margin-top:4px;" data-i18n="qr.ecHelp">L=小さい M=標準 H=大きい</div>
+        </section>
+
+        <section class="panel-section">
+          <h3 data-i18n="qr.options">オプション</h3>
+          <label class="qr-check-row">
+            <input type="checkbox" id="qr-quiet-zone" checked>
+            <span data-i18n="qr.quietZone">余白（クワイエットゾーン）</span>
+          </label>
+          <label class="qr-check-row">
+            <input type="checkbox" id="qr-diag-bridge">
+            <span data-i18n="qr.diagBridge">斜め接続補正</span>
+          </label>
+          <div class="qr-check-row" id="qr-diag-size-row" style="padding-left:20px;display:none">
+            <span data-i18n="qr.expandRatio">拡張率</span>
+            <input type="number" id="qr-diag-size" value="2" min="1" max="5"
+                   style="width:42px;padding:2px 4px;font-size:11px;border:1px solid var(--color-border);border-radius:3px;margin-left:4px">
+            <span style="font-size:10px;color:var(--color-muted)" data-i18n="common.times">倍</span>
+          </div>
+          <label class="qr-check-row">
+            <input type="checkbox" id="qr-border-fill">
+            <span data-i18n="qr.borderFill">外枠を黒で囲む</span>
+          </label>
+          <label class="qr-check-row">
+            <input type="checkbox" id="qr-noise-enabled">
+            <span data-i18n="qr.noise">白マスにノイズ追加</span>
+          </label>
+          <div class="qr-check-row" id="qr-noise-row" style="padding-left:20px;display:none">
+            <span data-i18n="qr.noiseDensity">密度</span>
+            <input type="number" id="qr-noise-pct" value="5" min="1" max="30"
+                   style="width:42px;padding:2px 4px;font-size:11px;border:1px solid var(--color-border);border-radius:3px;margin-left:4px">
+            <span style="font-size:10px;color:var(--color-muted)" data-i18n="common.percent">%</span>
+          </div>
+        </section>
+
+        <!-- 検証 -->
+        <section class="panel-section">
+          <h3 data-i18n="qr.validate">✅ 検証</h3>
+          <div class="validate-row">
+            <button class="btn-secondary" id="qr-btn-validate" disabled data-i18n="qr.validateBtn">解の検証</button>
+            <button class="btn-danger" id="qr-btn-validate-cancel"
+                    style="display:none;padding:2px 6px;font-size:11px;" data-i18n="common.cancel">✕ 中止</button>
+            <input type="color" id="qr-validate-color" value="#ff6600" title="未解決マスの着色">
+          </div>
+          <div id="qr-validate-progress" style="display:none;margin:4px 0 2px;">
+            <div style="background:#e0e0e0;border-radius:3px;height:6px;overflow:hidden;">
+              <div id="qr-validate-bar"
+                   style="background:var(--color-primary);height:100%;width:0%;transition:width 0.15s;"></div>
+            </div>
+            <div id="qr-validate-pct"
+                 style="font-size:10px;color:var(--color-muted);margin-top:1px;text-align:right;">0%</div>
+          </div>
+          <div id="qr-validate-result"></div>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:4px;">
+            <button class="btn-secondary" id="qr-btn-fill-unsolved" disabled
+                    style="font-size:10px;padding:3px 8px;flex:1;" data-i18n="qr.fillUnsolved">
+              🎲 境界黒マス追加
+            </button>
+            <input type="number" id="qr-fill-pct" value="20" min="0" max="50"
+                   style="width:38px;padding:2px 4px;font-size:11px;border:1px solid var(--color-border);border-radius:3px;">
+            <span style="font-size:10px;color:var(--color-muted)" data-i18n="common.percent">%</span>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <h3 data-i18n="qr.output">出力</h3>
+          <div style="padding:0 8px; display:flex; flex-direction:column; gap:6px;">
+            <input type="text" id="qr-puzzle-name" data-i18n-placeholder="qr.puzzleName" placeholder="問題名" value="qr-nonogram"
+                   style="padding:4px 6px; border:1px solid var(--color-border); border-radius:4px; font-size:12px;">
+            <button class="btn-primary" id="qr-send-btn" disabled data-i18n="qr.transfer">解答タブへ渡す</button>
+            <button class="btn-secondary" id="qr-save-btn" disabled data-i18n="qr.saveTxt">.txt で保存</button>
+            <button class="btn-secondary" id="qr-print-btn" disabled data-i18n="qr.print">🖨 印刷用PDF</button>
+          </div>
+        </section>
+
+      </aside><!-- #qr-panel -->
+
+      <!-- メインエリア -->
+      <div id="qr-main">
+
+        <!-- 左列: QRプレビュー＋情報 -->
+        <div id="qr-left-col">
+          <div class="qr-preview-box">
+            <label data-i18n="qr.preview">QRコードプレビュー</label>
+            <canvas id="qr-preview-canvas" width="240" height="240"></canvas>
+          </div>
+          <div id="qr-info-text" data-i18n="qr.prompt">URLを入力して「QR生成」を押してください</div>
+        </div>
+
+        <!-- 右列: ノノグラムグリッド -->
+        <div id="qr-grid-section">
+          <h4 data-i18n="qr.gridLabel">ノノグラムグリッド（クリックで手動編集可）</h4>
+          <div id="qr-grid-wrap"></div>
+        </div>
+
+      </div><!-- #qr-main -->
+    </div><!-- #qr-layout -->
+  </div><!-- #tab-qr -->
+
+</div><!-- #app -->
+
+<!-- ローディングオーバーレイ -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <div id="loading-label" data-i18n="solver.solvingStatus">解答中...</div>
+</div>
+
+<!-- SEO: ページ下部にキーワード含む非表示テキスト -->
+<footer id="seo-footer" style="padding:12px 16px;font-size:11px;color:#999;text-align:center;border-top:1px solid #eee;margin-top:20px;">
+  <p>Also known as: Nonogram, Picross, Griddlers, Hanjie, Paint by Numbers, Japanese Crossword,
+  お絵かきロジック, イラストロジック, ピクロス, ノノグラム, ロジックアート,
+  Японский кроссворд, 네모로직, Logimage, Crucipixel, Nonogramm, Nonograma,
+  Kare Karalamaca, 数织, 數織, Malowane Liczbami</p>
+</footer>
+
+<!-- ── i18n ── -->
+<script src="i18n/i18n.js"></script>
+<script src="i18n/ja.js"></script>
+<script src="i18n/en.js"></script>
+<script src="i18n/ru.js"></script>
+<script src="i18n/ko.js"></script>
+<script src="i18n/fr.js"></script>
+<script src="i18n/it.js"></script>
+<script src="i18n/de.js"></script>
+<script src="i18n/es.js"></script>
+<script src="i18n/tr.js"></script>
+<script src="i18n/zh-CN.js"></script>
+<script src="i18n/zh-TW.js"></script>
+<script src="i18n/pl.js"></script>
+
+<!-- ── 共通ユーティリティ ── -->
+<script src="js/print-puzzle.js"></script>
+
+<!-- ── 解答タブ JS ── -->
+<script src="js/solver.js"></script>
+<script src="js/hint-input.js"></script>
+<script src="js/grid-canvas.js"></script>
+<script src="js/file-io.js"></script>
+<script src="js/tab.js"></script>
+<script src="js/main.js"></script>
+
+<!-- ── 問題作成タブ JS ── -->
+<script src="creator/image-proc.js"></script>
+<script src="creator/crop-tool.js"></script>
+<script src="creator/grid-editor.js"></script>
+<script src="creator/creator.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => Creator.init());
+</script>
+
+<!-- ── QRコードタブ JS ── -->
+<script src="qr/qrcode-lib.js"></script>
+<script src="qr/qr-creator.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => QrCreator.init());
+</script>
+
+<!-- ── 言語切替 + i18n 初期化 ── -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 言語セレクタを構築
+  const sel = document.getElementById('lang-select');
+  if (sel) {
+    I18n.available().forEach(lang => {
+      const opt = document.createElement('option');
+      opt.value = lang;
+      opt.textContent = I18n.t('lang.name');
+      // 名前を仮で入れ（後で更新）
+      sel.appendChild(opt);
+    });
+    // 各言語の名前をその言語自身で表示
+    const langNames = {};
+    I18n.available().forEach(lang => {
+      const saved = I18n.getLang();
+      I18n.register(lang, {}); // ensure exists
+      // 名前は各言語のdict内にある
+    });
+    // セレクタの各optionにその言語の名前を設定
+    sel.querySelectorAll('option').forEach(opt => {
+      const origLang = I18n.getLang();
+      // 一時的にその言語に切り替えて名前取得
+      const dict = I18n.available().includes(opt.value) ? opt.value : 'ja';
+      // 直接辞書から取得
+      opt.textContent = opt.value; // fallback
+    });
+
+    sel.addEventListener('change', () => I18n.setLang(sel.value));
+  }
+
+  // i18n 初期化
+  I18n.init();
+
+  // 言語セレクタの値を同期 + 各option表記を更新
+  if (sel) {
+    sel.value = I18n.getLang();
+    // 各言語のlang.nameをその言語から取得してoption表示
+    _updateLangOptions();
+  }
+
+  document.addEventListener('langchange', () => {
+    if (sel) sel.value = I18n.getLang();
+    _updateLangOptions();
+  });
+
+  function _updateLangOptions() {
+    if (!sel) return;
+    const langLabels = {
+      'ja': '🇯🇵 日本語',
+      'en': '🇬🇧 English',
+      'ru': '🇷🇺 Русский',
+      'ko': '🇰🇷 한국어',
+      'fr': '🇫🇷 Français',
+      'it': '🇮🇹 Italiano',
+      'de': '🇩🇪 Deutsch',
+      'es': '🇪🇸 Español',
+      'tr': '🇹🇷 Türkçe',
+      'zh-CN': '🇨🇳 简体中文',
+      'zh-TW': '🇹🇼 繁體中文',
+      'pl': '🇵🇱 Polski',
+    };
+    sel.querySelectorAll('option').forEach(opt => {
+      opt.textContent = langLabels[opt.value] || opt.value;
+    });
+  }
+});
+</script>
+
+</body>
+</html>
