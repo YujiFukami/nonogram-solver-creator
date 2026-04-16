@@ -130,9 +130,8 @@ I18n.register('zh-CN', {
   'validate.error': '错误: {{msg}}',
 
   // ── 示例谜题 ──
-  'solver.sampleLoaded': '📘 示例谜题「{{name}}」已加载。按「▶ 求解」开始自动求解。',
-  'solver.sampleClearHint': '💡 要输入新谜题，请先按「🗑 全部清除」。',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 从示例中选择',
+  'solver.sampleModalTitle': '📂 选择示例谜题',
 
   // ── 语言名称（本语言名称） ──
   'lang.name': '简体中文',

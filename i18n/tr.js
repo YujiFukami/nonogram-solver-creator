@@ -130,9 +130,8 @@ I18n.register('tr', {
   'validate.error': 'Hata: {{msg}}',
 
   // ── Örnek bulmaca ──
-  'solver.sampleLoaded': '📘 Örnek bulmaca "{{name}}" yüklendi. Otomatik çözümü başlatmak için "▶ Çöz" düğmesine basın.',
-  'solver.sampleClearHint': '💡 Yeni bir bulmaca girmek için önce "🗑 Tümünü temizle" düğmesine basın.',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 Örnekten seç',
+  'solver.sampleModalTitle': '📂 Örnek bulmaca seçin',
 
   // ── Dil adı ──
   'lang.name': 'Türkçe',

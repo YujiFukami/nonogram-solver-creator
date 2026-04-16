@@ -61,6 +61,9 @@
   <header id="header">
     <h1 data-i18n="app.title">イラストロジック 自動解答</h1>
     <div id="header-right">
+      <a href="https://www.softex-celware.com/" target="_blank" rel="noopener" id="header-logo-link" title="SOFTEX CELWARE">
+        <img src="img/softex-celware-logo.svg" alt="SOFTEX CELWARE" id="header-logo-img">
+      </a>
       <select id="lang-select" title="Language / 言語"></select>
       <div id="solve-rate-display"><span data-i18n="app.solveRate">解決率:</span> 0%</div>
     </div>
@@ -106,6 +109,7 @@
           <button class="btn-file" id="btn-load" data-i18n="solver.load">📂 読込</button>
           <button class="btn-file" id="btn-save" data-i18n="solver.save">💾 保存</button>
         </div>
+        <button class="btn-file btn-sample" id="btn-sample" data-i18n="solver.sampleSelect">📋 サンプルから選ぶ</button>
         <button class="btn-file" id="btn-save-image" data-i18n="solver.saveImage">🖼 画像として保存</button>
         <label style="font-size:11px;display:flex;align-items:center;gap:5px;margin-top:3px;cursor:pointer;">
           <input type="checkbox" id="chk-save-with-hints"> <span data-i18n="solver.saveWithHints">ヒント数字を含む</span>
@@ -178,20 +182,6 @@
 
     <!-- パズルエリア -->
     <div id="puzzle-area">
-
-      <!-- サンプル問題バナー -->
-      <div id="sample-banner" style="display:none;">
-        <div id="sample-banner-row1">
-          <a href="https://www.softex-celware.com/" target="_blank" rel="noopener" id="sample-banner-logo">
-            <img src="img/softex-celware-logo.svg" alt="SOFTEX CELWARE" height="22">
-          </a>
-          <span id="sample-banner-text"></span>
-          <button id="sample-banner-close" type="button" title="閉じる">✕</button>
-        </div>
-        <div id="sample-banner-row2">
-          <span id="sample-banner-hint"></span>
-        </div>
-      </div>
 
       <!-- ヒント入力パネル（グリッド上部に配置） -->
       <div id="hint-input-panel">
@@ -545,16 +535,22 @@
 
 <!-- SEO: ページ下部にキーワード含む非表示テキスト -->
 <footer id="seo-footer" style="padding:12px 16px;font-size:11px;color:#999;text-align:center;border-top:1px solid #eee;margin-top:20px;">
-  <p style="margin-bottom:8px;">
-    <a href="https://www.softex-celware.com/" target="_blank" rel="noopener" style="display:inline-block;opacity:.7;transition:opacity .2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.7'">
-      <img src="img/softex-celware-logo.svg" alt="SOFTEX CELWARE" height="18" style="vertical-align:middle;">
-    </a>
-  </p>
   <p>Also known as: Nonogram, Picross, Griddlers, Hanjie, Paint by Numbers, Japanese Crossword,
   お絵かきロジック, イラストロジック, ピクロス, ノノグラム, ロジックアート,
   Японский кроссворд, 네모로직, Logimage, Crucipixel, Nonogramm, Nonograma,
   Kare Karalamaca, 数织, 數織, Malowane Liczbami</p>
 </footer>
+
+<!-- サンプル問題選択モーダル -->
+<div id="sample-modal-overlay" style="display:none;">
+  <div id="sample-modal">
+    <div id="sample-modal-header">
+      <h3 data-i18n="solver.sampleModalTitle">📂 サンプル問題を選択</h3>
+      <button id="sample-modal-close" type="button">✕</button>
+    </div>
+    <div id="sample-modal-list"></div>
+  </div>
+</div>
 
 <!-- ── i18n ── -->
 <script src="i18n/i18n.js"></script>

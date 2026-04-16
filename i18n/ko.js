@@ -130,9 +130,8 @@ I18n.register('ko', {
   'validate.error': '오류: {{msg}}',
 
   // ── 샘플 퍼즐 ──
-  'solver.sampleLoaded': '📘 샘플 퍼즐 "{{name}}"이(가) 로드되었습니다. "▶ 풀기"를 눌러 자동 풀이를 시작하세요.',
-  'solver.sampleClearHint': '💡 새 퍼즐을 입력하려면 먼저 "🗑 전체 지우기"를 누르세요.',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 샘플에서 선택',
+  'solver.sampleModalTitle': '📂 샘플 퍼즐 선택',
 
   // ── 언어 이름 ──
   'lang.name': '한국어',

@@ -130,9 +130,8 @@ I18n.register('pl', {
   'validate.error': 'Błąd: {{msg}}',
 
   // ── Przykładowa łamigłówka ──
-  'solver.sampleLoaded': '📘 Przykładowa łamigłówka "{{name}}" jest załadowana. Naciśnij "▶ Rozwiąż", aby rozpocząć automatyczne rozwiązywanie.',
-  'solver.sampleClearHint': '💡 Aby wprowadzić nową łamigłówkę, najpierw naciśnij "🗑 Wyczyść wszystko".',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 Wybierz przykład',
+  'solver.sampleModalTitle': '📂 Wybierz przykładową łamigłówkę',
 
   // ── Nazwa języka ──
   'lang.name': 'Polski',

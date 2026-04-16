@@ -130,9 +130,8 @@ I18n.register('ru', {
   'validate.error': 'Ошибка: {{msg}}',
 
   // ── Пример головоломки ──
-  'solver.sampleLoaded': '📘 Загружен пример «{{name}}». Нажмите «▶ Решить», чтобы начать автоматическое решение.',
-  'solver.sampleClearHint': '💡 Чтобы ввести новую головоломку, сначала нажмите «🗑 Очистить всё».',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 Выбрать образец',
+  'solver.sampleModalTitle': '📂 Выберите образец головоломки',
 
   // ── Название языка ──
   'lang.name': 'Русский',

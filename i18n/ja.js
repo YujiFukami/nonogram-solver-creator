@@ -130,9 +130,8 @@ I18n.register('ja', {
   'validate.error': 'エラー: {{msg}}',
 
   // ── サンプル問題 ──
-  'solver.sampleLoaded': '📘 サンプル問題「{{name}}」が読み込まれています。「▶ 解答実行」で自動解答を開始できます。',
-  'solver.sampleClearHint': '💡 新しい問題を入力する場合は「🗑 全クリア」を押してください。',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 サンプルから選ぶ',
+  'solver.sampleModalTitle': '📂 サンプル問題を選択',
 
   // ── 言語名（自身の言語名） ──
   'lang.name': '日本語',

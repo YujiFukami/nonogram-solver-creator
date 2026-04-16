@@ -1,13 +1,17 @@
 'use strict';
 
 /**
- * sample-puzzle.js — サンプル問題データ (SOFTEX CELWARE)
- * アプリ起動時にデモとして自動読み込みされる
+ * sample-puzzle.js — サンプル問題データ
+ * 「サンプルから選ぶ」ボタンで一覧表示される問題集
+ * 新しい問題を追加する場合は SamplePuzzles 配列に追加するだけでOK
  */
-const SamplePuzzle = {
-  name: 'SOFTEX CELWARE',
-  // VBA互換テキスト形式（FileIO.parseTextFile で直接パース可能）
-  text: [
+const SamplePuzzles = [
+  {
+    name: 'SOFTEX CELWARE',
+    rows: 24,
+    cols: 201,
+    // VBA互換テキスト形式（FileIO.parseTextFile で直接パース可能）
+    text: [
     '24,3,201,20',
     '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0',
     '6,4,0', '9,6,0', '11,6,0', '4,4,4', '3,5,4',
@@ -73,5 +77,8 @@ const SamplePuzzle = {
     '8,8,3,3,10,4,4,7,10,10,3,3,3,3,3,3,11,0,0,0',
     '5,5,3,3,10,4,3,5,10,10,3,3,3,3,3,3,11,0,0,0',
     '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0'
-  ].join('\n')
-};
+    ].join('\n')
+  },
+  // ここに新しいサンプル問題を追加可能:
+  // { name: '問題名', rows: 行数, cols: 列数, text: 'VBA形式テキスト' },
+];

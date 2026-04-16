@@ -130,9 +130,8 @@ I18n.register('en', {
   'validate.error': 'Error: {{msg}}',
 
   // ── Sample puzzle ──
-  'solver.sampleLoaded': '📘 Sample puzzle "{{name}}" is loaded. Press "▶ Solve" to start auto-solving.',
-  'solver.sampleClearHint': '💡 To enter a new puzzle, press "🗑 Clear All" first.',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 Select sample',
+  'solver.sampleModalTitle': '📂 Select a sample puzzle',
 
   // ── Language name (own language) ──
   'lang.name': 'English',

@@ -95,9 +95,7 @@ function init() {
   });
 
   bindEvents();
-
-  // サンプル問題の読み込み
-  loadSamplePuzzle();
+  setStatus((typeof I18n !== 'undefined') ? I18n.t('solver.status') : '問題のヒントを入力して「解答実行」を押してください');
 
   // 言語切替時に動的テキストを更新
   document.addEventListener('langchange', () => {
@@ -105,27 +103,24 @@ function init() {
     el.cellSizeDisplay.textContent = I18n.t('solver.cellSize', { n: cs });
     // ヒント入力ラベルを再描画
     if (App.hintInput) App.hintInput._selectLine(App.hintInput._editType, App.hintInput._editIndex);
-    // サンプルバナーのテキスト更新
-    updateSampleBannerText();
   });
 }
 
-// ─── サンプル問題読み込み ─────────────────────────────────
-function loadSamplePuzzle() {
-  if (typeof SamplePuzzle === 'undefined' || !SamplePuzzle.text) {
-    setStatus((typeof I18n !== 'undefined') ? I18n.t('solver.status') : '問題のヒントを入力して「解答実行」を押してください');
-    return;
-  }
+// ─── サンプル問題選択 ─────────────────────────────────────
 
-  const result = FileIO.parseTextFile(SamplePuzzle.text);
+/** サンプル問題をアプリに読み込む */
+function loadSampleByIndex(index) {
+  if (typeof SamplePuzzles === 'undefined' || !SamplePuzzles[index]) return;
+  const sample = SamplePuzzles[index];
+
+  const result = FileIO.parseTextFile(sample.text);
   if (result.error) {
-    setStatus((typeof I18n !== 'undefined') ? I18n.t('solver.status') : '問題のヒントを入力して「解答実行」を押してください');
+    setStatus(`サンプル読み込みエラー: ${result.error}`, 'error');
     return;
   }
 
   const { rows, cols, rowHints, colHints } = result;
 
-  // サイズを適用
   App.rows = rows;
   App.cols = cols;
   el.inputRows.value = rows;
@@ -136,45 +131,44 @@ function loadSamplePuzzle() {
   App.hintInput.setHints(rowHints, colHints);
   updateSolveRate(0);
 
-  App.puzzleName = SamplePuzzle.name || 'sample';
-  App.isSampleLoaded = true;
-
-  // サンプルバナー表示
-  showSampleBanner();
-
-  // 自動ズームフィット
+  App.puzzleName = sample.name || 'sample';
+  setStatus(`「${sample.name}」を読み込みました (${rows}×${cols})`, 'success');
   autoZoomFit();
 }
 
-function showSampleBanner() {
-  const banner = document.getElementById('sample-banner');
-  if (!banner) return;
-  banner.style.display = 'flex';
-  updateSampleBannerText();
+/** サンプル選択モーダルを開く */
+function openSampleModal() {
+  const overlay = document.getElementById('sample-modal-overlay');
+  const list    = document.getElementById('sample-modal-list');
+  if (!overlay || !list) return;
 
-  // 閉じるボタン
-  const closeBtn = document.getElementById('sample-banner-close');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      banner.style.display = 'none';
+  // 一覧を生成
+  list.innerHTML = '';
+  if (typeof SamplePuzzles === 'undefined' || SamplePuzzles.length === 0) {
+    list.innerHTML = '<p style="color:#6b7280;text-align:center;padding:20px;">サンプル問題がありません</p>';
+  } else {
+    SamplePuzzles.forEach((sample, i) => {
+      const item = document.createElement('div');
+      item.className = 'sample-item';
+      item.innerHTML = `
+        <span class="sample-item-name">${sample.name}</span>
+        <span class="sample-item-size">${sample.rows} × ${sample.cols}</span>
+      `;
+      item.addEventListener('click', () => {
+        loadSampleByIndex(i);
+        overlay.style.display = 'none';
+      });
+      list.appendChild(item);
     });
   }
+
+  overlay.style.display = 'flex';
 }
 
-function updateSampleBannerText() {
-  const textEl = document.getElementById('sample-banner-text');
-  const hintEl = document.getElementById('sample-banner-hint');
-  if (!App.isSampleLoaded) return;
-  if (!textEl || !hintEl) return;
-
-  const name = SamplePuzzle.name || 'Sample';
-  if (typeof I18n !== 'undefined') {
-    textEl.textContent = I18n.t('solver.sampleLoaded', { name });
-    hintEl.textContent = I18n.t('solver.sampleClearHint');
-  } else {
-    textEl.textContent = `📘 サンプル問題「${name}」が読み込まれています。「▶ 解答実行」で自動解答を開始できます。`;
-    hintEl.textContent = '💡 新しい問題を入力する場合は「🗑 全クリア」を押してください。';
-  }
+/** サンプル選択モーダルを閉じる */
+function closeSampleModal() {
+  const overlay = document.getElementById('sample-modal-overlay');
+  if (overlay) overlay.style.display = 'none';
 }
 
 // ─── イベントバインド ─────────────────────────────────────
@@ -189,6 +183,16 @@ function bindEvents() {
   el.fileInput.addEventListener('change', onFileSelected);
   el.btnSave.addEventListener('click', savePuzzle);
   el.btnSaveImage.addEventListener('click', saveImage);
+
+  // サンプル選択
+  const btnSample = document.getElementById('btn-sample');
+  if (btnSample) btnSample.addEventListener('click', openSampleModal);
+  const sampleClose = document.getElementById('sample-modal-close');
+  if (sampleClose) sampleClose.addEventListener('click', closeSampleModal);
+  const sampleOverlay = document.getElementById('sample-modal-overlay');
+  if (sampleOverlay) sampleOverlay.addEventListener('click', (e) => {
+    if (e.target === sampleOverlay) closeSampleModal();
+  });
 
   // 解答
   el.btnSolve.addEventListener('click', startSolve);
@@ -714,10 +718,6 @@ function clearAll() {
   App.hintInput.clearAll();
   updateSolveRate(0);
   App.puzzleName = 'nonogram';
-  App.isSampleLoaded = false;
-  // サンプルバナーを非表示
-  const banner = document.getElementById('sample-banner');
-  if (banner) banner.style.display = 'none';
   setStatus('データをクリアしました');
 }
 

@@ -130,9 +130,8 @@ I18n.register('fr', {
   'validate.error': 'Erreur : {{msg}}',
 
   // ── Puzzle exemple ──
-  'solver.sampleLoaded': '📘 Le puzzle exemple «{{name}}» est chargé. Appuyez sur «▶ Résoudre» pour lancer la résolution automatique.',
-  'solver.sampleClearHint': '💡 Pour entrer un nouveau puzzle, appuyez d'abord sur «🗑 Tout effacer».',
-  'solver.sampleName': 'SOFTEX CELWARE',
+  'solver.sampleSelect': '📋 Choisir un exemple',
+  'solver.sampleModalTitle': '📂 Sélectionner un puzzle exemple',
 
   // ── Nom de la langue ──
   'lang.name': 'Français',
