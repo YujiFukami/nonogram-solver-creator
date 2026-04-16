@@ -129,6 +129,11 @@ I18n.register('it', {
   'validate.partial': '⚠ Solo soluzione parziale {{n}}%',
   'validate.error': 'Errore: {{msg}}',
 
+  // ── Puzzle di esempio ──
+  'solver.sampleLoaded': '📘 Il puzzle di esempio "{{name}}" è caricato. Premi "▶ Risolvi" per avviare la risoluzione automatica.',
+  'solver.sampleClearHint': '💡 Per inserire un nuovo puzzle, premi prima "🗑 Cancella tutto".',
+  'solver.sampleName': 'SOFTEX CELWARE',
+
   // ── Nome della lingua ──
   'lang.name': 'Italiano',
 });

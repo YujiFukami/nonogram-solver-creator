@@ -129,6 +129,11 @@ I18n.register('zh-TW', {
   'validate.partial': '⚠ 僅部分解 {{n}}%',
   'validate.error': '錯誤: {{msg}}',
 
+  // ── 範例謎題 ──
+  'solver.sampleLoaded': '📘 範例謎題「{{name}}」已載入。按「▶ 求解」開始自動求解。',
+  'solver.sampleClearHint': '💡 要輸入新謎題，請先按「🗑 全部清除」。',
+  'solver.sampleName': 'SOFTEX CELWARE',
+
   // ── 語言名稱（本語言名稱） ──
   'lang.name': '繁體中文',
 });

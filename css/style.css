@@ -352,6 +352,62 @@ button:disabled { opacity: .45; cursor: default; }
   display: block;
 }
 
+/* ── サンプル問題バナー ────────────────────────────────── */
+#sample-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #dbeafe, #ede9fe);
+  border-bottom: 1px solid var(--color-hint-border);
+  flex-shrink: 0;
+}
+#sample-banner-row1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#sample-banner-row2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 2px;
+}
+#sample-banner-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: .85;
+  transition: opacity .2s;
+}
+#sample-banner-logo:hover { opacity: 1; }
+#sample-banner-logo img { height: 20px; }
+#sample-banner-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e40af;
+}
+#sample-banner-hint {
+  font-size: 11px;
+  color: #6d28d9;
+}
+#sample-banner-close {
+  width: auto;
+  padding: 2px 8px;
+  font-size: 12px;
+  background: rgba(255,255,255,.6);
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 3px;
+  color: #6b7280;
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+#sample-banner-close:hover {
+  background: rgba(255,255,255,.9);
+  color: #374151;
+}
+
 /* ── ヒント入力パネル（グリッド上部） ────────────────────── */
 #hint-input-panel {
   display: flex;

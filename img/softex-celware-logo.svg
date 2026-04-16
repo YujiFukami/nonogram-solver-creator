@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 295 34">
+  <style>
+    text { font-family: 'Arial Black', 'Impact', sans-serif; font-weight: 900; font-size: 32px; letter-spacing: 0.5px; }
+    .gray { fill: #a0a0a0; }
+    .green { fill: #1a6b3a; }
+  </style>
+  <text x="0" y="30">
+    <tspan class="gray">SOFT</tspan><tspan class="green">EX-CEL</tspan><tspan class="gray">WARE</tspan>
+  </text>
+</svg>

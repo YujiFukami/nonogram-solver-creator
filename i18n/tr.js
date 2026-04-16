@@ -129,6 +129,11 @@ I18n.register('tr', {
   'validate.partial': '⚠ Yalnızca kısmi çözüm {{n}}%',
   'validate.error': 'Hata: {{msg}}',
 
+  // ── Örnek bulmaca ──
+  'solver.sampleLoaded': '📘 Örnek bulmaca "{{name}}" yüklendi. Otomatik çözümü başlatmak için "▶ Çöz" düğmesine basın.',
+  'solver.sampleClearHint': '💡 Yeni bir bulmaca girmek için önce "🗑 Tümünü temizle" düğmesine basın.',
+  'solver.sampleName': 'SOFTEX CELWARE',
+
   // ── Dil adı ──
   'lang.name': 'Türkçe',
 });
