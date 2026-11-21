@@ -238,6 +238,27 @@ const ImageProcessor = (() => {
 
   // ─── コアパイプライン ─────────────────────────────────────────
 
+  /** 3×3 の中央値でならす（細かい模様を減らし、答えが1つに決まりやすくする） */
+  function smoothGray(gray, W, H) {
+    const out = new Float32Array(W * H);
+    const v = new Float32Array(9);
+    for (let r = 0; r < H; r++) {
+      for (let c = 0; c < W; c++) {
+        let k = 0;
+        for (let dr = -1; dr <= 1; dr++) {
+          const rr = Math.min(H - 1, Math.max(0, r + dr));
+          for (let dc = -1; dc <= 1; dc++) {
+            const cc = Math.min(W - 1, Math.max(0, c + dc));
+            v[k++] = gray[rr * W + cc];
+          }
+        }
+        v.sort();
+        out[r * W + c] = v[4];
+      }
+    }
+    return out;
+  }
+
   function _toGrayF32(data, W, H) {
     const gray = new Float32Array(W * H);
     for (let i = 0, j = 0; i < data.length; i += 4, j++) {
@@ -263,7 +284,11 @@ const ImageProcessor = (() => {
       threshold = 128, brightness = 0, contrast = 0,
       edgeBoost = 0,
       closing = 0, isolate = 0, minBlob = 0,
+      smooth = false,
     } = opts;
+
+    // ならし（ディザ以外）
+    if (smooth && mode !== 'dither') gray = smoothGray(gray, W, H);
 
     let grid;
 
@@ -312,6 +337,16 @@ const ImageProcessor = (() => {
     return _grayToGrid(_toGrayF32(data, cols, rows), cols, rows, opts);
   }
 
+  /** マス目ごとの明るさ（0-255）を返す。processGrid と同じ縮小方法 */
+  function grayCells(img, crop, cols, rows) {
+    const off = document.createElement('canvas');
+    off.width = cols; off.height = rows;
+    const ctx = off.getContext('2d');
+    ctx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, cols, rows);
+    const { data } = ctx.getImageData(0, 0, cols, rows);
+    return _toGrayF32(data, cols, rows);
+  }
+
   function renderPreview(img, crop, dest, opts) {
     const W = dest.width, H = dest.height;
     const ctx = dest.getContext('2d');
@@ -353,5 +388,5 @@ const ImageProcessor = (() => {
     return { rowHints, colHints };
   }
 
-  return { processGrid, renderPreview, generateHints };
+  return { processGrid, renderPreview, generateHints, grayCells, grayToGrid: _grayToGrid, smoothGray };
 })();

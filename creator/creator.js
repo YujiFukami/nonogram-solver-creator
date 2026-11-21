@@ -27,6 +27,7 @@ const Creator = (() => {
     closing:    0,
     isolate:    0,
     minBlob:    0,
+    smooth:     false,
     zoomPx:     0,     // 0=未設定(auto), N=絶対px
     cols:       30,
     rows:       20,
@@ -93,6 +94,14 @@ const Creator = (() => {
       validateProgress:  $c('cr-validate-progress'),
       validateBar:       $c('cr-validate-bar'),
       validatePct:       $c('cr-validate-pct'),
+      smooth:            $c('cr-smooth'),
+      ditherWarn:        $c('cr-dither-warn'),
+      btnSearch:         $c('cr-btn-search'),
+      btnSearchCancel:   $c('cr-btn-search-cancel'),
+      searchProgress:    $c('cr-search-progress'),
+      searchBar:         $c('cr-search-bar'),
+      searchResult:      $c('cr-search-result'),
+      searchCands:       $c('cr-search-cands'),
     };
 
     _editor = new GridEditor(el.gridWrap);
@@ -214,6 +223,16 @@ const Creator = (() => {
       _update();
     });
 
+    // ならし
+    if (el.smooth) el.smooth.addEventListener('change', () => {
+      _settings.smooth = el.smooth.checked;
+      _update();
+    });
+
+    // 解ける設定を探す
+    if (el.btnSearch) el.btnSearch.addEventListener('click', _searchSolvable);
+    if (el.btnSearchCancel) el.btnSearchCancel.addEventListener('click', () => { if (_search) _search.cancel(); });
+
     // 参照オーバーレイ
     el.overlayOpacity.addEventListener('input', () => {
       _settings.overlayOpacity = parseInt(el.overlayOpacity.value);
@@ -316,6 +335,9 @@ const Creator = (() => {
   }
 
   function _updateEdgeBoostVisibility() {
+    if (el.ditherWarn) {
+      el.ditherWarn.style.display = (_settings.mode === 'dither' || _settings.mode === 'outline') ? '' : 'none';
+    }
     if (el.edgeBoostRow) {
       const show = _settings.mode === 'threshold' || _settings.mode === 'outline';
       el.edgeBoostRow.style.display = show ? '' : 'none';
@@ -872,6 +894,112 @@ const Creator = (() => {
     reader.readAsText(file);
   }
 
+  // ─── 解ける設定を探す ─────────────────────────────────────
+
+  let _search = null;
+
+  function _searchSolvable() {
+    if (!_img) { alert('先に画像を読み込んでください'); return; }
+    if (_search) return;
+
+    const crop = _cropTool.getCropRect();
+    const W = _settings.cols, H = _settings.rows;
+    const gray = ImageProcessor.grayCells(_img, crop, W, H);
+
+    el.btnSearch.disabled = true;
+    el.btnSearchCancel.style.display = '';
+    el.searchProgress.style.display = '';
+    el.searchBar.style.width = '0%';
+    el.searchResult.className = 'ps-result';
+    el.searchResult.textContent = `探しています…（${W}×${H}）`;
+    el.searchCands.innerHTML = '';
+
+    _search = PuzzleSearchClient.run('image', { gray, W, H, maxResults: 6 }, (done, total) => {
+      el.searchBar.style.width = Math.round(done / total * 100) + '%';
+    });
+
+    _search.promise.then(res => {
+      if (res.cancelled) {
+        el.searchResult.className = 'ps-result';
+        el.searchResult.textContent = '⏹ 中止しました';
+        return;
+      }
+      el.searchBar.style.width = '100%';
+      if (!res.candidates.length) {
+        el.searchResult.className = 'ps-result ng';
+        el.searchResult.textContent = '候補が見つかりませんでした（ほぼ真っ白・真っ黒の画像です）';
+        return;
+      }
+      const solved = res.candidates.filter(c => c.solved).length;
+      el.searchResult.className = 'ps-result ' + (solved ? 'ok' : 'warn');
+      el.searchResult.innerHTML = (solved
+        ? `✅ 答えが1つに決まる設定が見つかりました`
+        : `⚠ 完全に解ける設定は見つかりませんでした。解ける割合の高い順に表示しています`)
+        + `<span class="ps-sub">${res.tried}通りを試し、完全に解けるもの ${res.solvedCount}件（${(res.ms / 1000).toFixed(1)}秒）`
+        + (res.reduced ? '。マス数が多いため試す数を減らしています' : '')
+        + (solved ? '。下の候補から選べます' : '。マス数を減らすと見つかりやすくなります')
+        + '</span>';
+      _renderCandidates(res.candidates);
+      _applyCandidate(res.candidates[0], 0);
+      // 候補が下の「出力」欄に隠れないよう、見える位置までスクロール
+      el.searchCands.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }).catch(err => {
+      el.searchResult.className = 'ps-result ng';
+      el.searchResult.textContent = 'エラー: ' + err.message;
+    }).finally(() => {
+      _search = null;
+      el.btnSearch.disabled = false;
+      el.btnSearchCancel.style.display = 'none';
+      setTimeout(() => { el.searchProgress.style.display = 'none'; }, 600);
+    });
+  }
+
+  function _renderCandidates(cands) {
+    el.searchCands.innerHTML = '';
+    cands.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ps-cand';
+      const rows = c.grid.length, cols = c.grid[0].length;
+      const px = Math.max(1, Math.floor(76 / Math.max(cols, rows)));
+      const cv = document.createElement('canvas');
+      cv.width = cols * px; cv.height = rows * px;
+      const ctx = cv.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.fillStyle = '#1a1a1a';
+      for (let r = 0; r < rows; r++) for (let x = 0; x < cols; x++) {
+        if (c.grid[r][x]) ctx.fillRect(x * px, r * px, px, px);
+      }
+      const label = document.createElement('div');
+      label.className = 'ps-cand-label';
+      label.innerHTML = (c.solved ? '<span class="ok">✔ 解ける</span>' : `<span class="ng">${Math.floor(c.rate * 1000) / 10}%</span>`)
+        + ` 黒${Math.round(c.blackRatio * 100)}%`;
+      btn.title = `しきい値 ${c.settings.threshold}${c.settings.smooth ? '・ならし' : ''}・閉包 ${c.settings.closing}・孤立除去 ${c.settings.isolate}・最小塊 ${c.settings.minBlob}`;
+      btn.append(cv, label);
+      btn.addEventListener('click', () => _applyCandidate(c, i));
+      el.searchCands.appendChild(btn);
+    });
+  }
+
+  /** 候補の設定を反映して問題を作り直す */
+  function _applyCandidate(c, index) {
+    Object.assign(_settings, {
+      mode: 'threshold', threshold: c.settings.threshold, smooth: c.settings.smooth,
+      closing: c.settings.closing, isolate: c.settings.isolate, minBlob: c.settings.minBlob,
+      brightness: 0, contrast: 0, edgeBoost: 0,
+    });
+    _applySettingsToUI(_settings);
+    _updateEdgeBoostVisibility();
+    _update();
+    el.searchCands.querySelectorAll('.ps-cand').forEach((b, i) => b.classList.toggle('selected', i === index));
+
+    _lastSolverResult = null;
+    el.btnFillUnsolved.disabled = true;
+    _editor.clearValidationOverlay();
+    el.validateResult.textContent = c.solved ? '✅ 唯一解あり（探索で確認）' : `⚠ 部分解のみ ${Math.floor(c.rate * 100)}%（「解の検証」で未確定マスを確認できます）`;
+    el.validateResult.className   = c.solved ? 'validate-ok' : 'validate-warn';
+  }
+
   function _applySettingsToUI(s) {
     el.threshold.value      = s.threshold;    el.thresholdVal.textContent  = s.threshold;
     el.brightness.value     = s.brightness;   el.brightnessVal.textContent = s.brightness;
@@ -885,6 +1013,7 @@ const Creator = (() => {
     el.cols.value           = s.cols;
     el.rows.value           = s.rows;
     el.autoRows.checked     = s.autoRows;
+    if (el.smooth) el.smooth.checked = !!s.smooth;
 
     const radio = document.querySelector(`input[name="cr-mode"][value="${s.mode}"]`);
     if (radio) radio.checked = true;

@@ -133,6 +133,15 @@ I18n.register('tr', {
 
   // ── Örnek bulmaca ──
   'solver.sampleSelect': '📋 Örnekten seç',
+  'search.ditherWarn': '⚠ Dither and outline modes rarely give a unique solution. Try "Find solvable settings".',
+  'search.smooth': 'Smoothing (reduce fine patterns)',
+  'search.imageTitle': '🔎 Find solvable settings',
+  'search.imageHelp': 'Automatically tries combinations of threshold and other settings to find a puzzle with a unique solution (at the current grid size).',
+  'search.imageRun': '🔎 Find solvable settings',
+  'search.qrTitle': '🔎 Find a solvable QR',
+  'search.qrHelp': 'Builds hundreds of QR codes with the same content and picks one that has a unique solution and still scans. Error correction is searched from the level selected below upward.',
+  'search.allowSuffix': 'Allow adding #number to the end of the URL (same page opens)',
+  'search.qrRun': '🔎 Find a solvable QR',
   'aiImport.open': '📷 Import from image (AI)',
   'aiImport.title': '📷 Import a puzzle from an image with AI',
   'aiImport.intro': 'Let your own AI (ChatGPT, Gemini, Claude, etc.) read the puzzle image and write out the clues. No extra cost (within your AI plan).',

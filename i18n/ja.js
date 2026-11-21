@@ -133,6 +133,15 @@ I18n.register('ja', {
 
   // ── サンプル問題 ──
   'solver.sampleSelect': '📋 サンプルから選ぶ',
+  'search.ditherWarn': '⚠ ディザ・輪郭は答えが1つに決まりにくい方式です。「解ける設定を探す」もお試しください',
+  'search.smooth': 'ならし（細かい模様を減らす）',
+  'search.imageTitle': '🔎 解ける設定を探す',
+  'search.imageHelp': 'しきい値などの組み合わせを自動で試し、答えが1つに決まる問題になる設定を探します（今のマス数で探します）',
+  'search.imageRun': '🔎 解ける設定を探す',
+  'search.qrTitle': '🔎 解けるQRを探す',
+  'search.qrHelp': '同じ内容のQRを数百通り作り、答えが1つに決まって読み取りもできるものを選びます。誤り訂正は下で選んだレベル以上から探します',
+  'search.allowSuffix': 'URLの末尾に #数字 を付けてよい（開くページは同じ）',
+  'search.qrRun': '🔎 解けるQRを探す',
   'aiImport.open': '📷 画像からAIで読込',
   'aiImport.title': '📷 画像からAIで問題を読み込む',
   'aiImport.intro': 'お使いのAI（ChatGPT・Gemini・Claude など）に問題の画像を読ませて、ヒントのデータを作ってもらいます。料金はかかりません（お使いのAIの範囲内）。',

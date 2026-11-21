@@ -58,6 +58,7 @@
   <link rel="stylesheet" href="qr/qr-creator.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/ai-import.css">
+  <link rel="stylesheet" href="css/puzzle-search.css">
 </head>
 <body>
 <div id="app">
@@ -237,6 +238,7 @@
             <label class="cr-mode-btn"><input type="radio" name="cr-mode" value="dither"><span data-i18n="creator.dither">ディザ</span></label>
             <label class="cr-mode-btn"><input type="radio" name="cr-mode" value="outline"><span data-i18n="creator.outline">輪郭</span></label>
           </div>
+          <div class="ps-warn" id="cr-dither-warn" style="display:none" data-i18n="search.ditherWarn">⚠ ディザ・輪郭は答えが1つに決まりにくい方式です。「解ける設定を探す」もお試しください</div>
           <div class="slider-row">
             <label><span data-i18n="creator.threshold">閾値</span> <span id="cr-threshold-val">128</span></label>
             <input type="range" id="cr-threshold" min="0" max="255" value="128">
@@ -248,6 +250,10 @@
           <div class="slider-row">
             <label><span data-i18n="creator.contrast">コントラスト</span> <span id="cr-contrast-val">0</span></label>
             <input type="range" id="cr-contrast" min="-100" max="100" value="0">
+          </div>
+          <div class="check-row">
+            <input type="checkbox" id="cr-smooth">
+            <label for="cr-smooth" data-i18n="search.smooth">ならし（細かい模様を減らす）</label>
           </div>
           <div class="slider-row" id="cr-edge-boost-row">
             <label><span data-i18n="creator.edgeBoost">エッジ強調</span> <span id="cr-edge-boost-val">0</span></label>
@@ -272,6 +278,19 @@
             <label><span data-i18n="creator.cellSize">セルサイズ</span> <span id="cr-zoom-val">--</span></label>
             <input type="range" id="cr-zoom" min="1" max="40" value="8" step="1">
           </div>
+        </section>
+
+        <!-- 解ける設定を探す -->
+        <section class="panel-section ps-section">
+          <h3 data-i18n="search.imageTitle">🔎 解ける設定を探す</h3>
+          <div class="ps-help" data-i18n="search.imageHelp">しきい値などの組み合わせを自動で試し、答えが1つに決まる問題になる設定を探します（今のマス数で探します）</div>
+          <div class="ps-row">
+            <button class="btn-primary" id="cr-btn-search" data-i18n="search.imageRun">🔎 解ける設定を探す</button>
+            <button class="btn-danger ps-cancel" id="cr-btn-search-cancel" style="display:none" data-i18n="common.cancel">✕ 中止</button>
+          </div>
+          <div class="ps-progress" id="cr-search-progress" style="display:none"><div class="ps-bar" id="cr-search-bar"></div></div>
+          <div class="ps-result" id="cr-search-result" aria-live="polite"></div>
+          <div class="ps-cands" id="cr-search-cands"></div>
         </section>
 
         <!-- 後処理 -->
@@ -420,6 +439,24 @@
           <div id="qr-url-wrap">
             <input type="text" id="qr-url-input" data-i18n-placeholder="qr.urlPlaceholder" placeholder="https://example.com" autocomplete="off">
             <button class="btn-primary" id="qr-generate-btn" data-i18n="qr.generate">QR生成</button>
+          </div>
+        </section>
+
+        <!-- 解けるQRを探す -->
+        <section class="panel-section ps-section">
+          <h3 data-i18n="search.qrTitle">🔎 解けるQRを探す</h3>
+          <div class="ps-inner">
+            <div class="ps-help" data-i18n="search.qrHelp">同じ内容のQRを数百通り作り、答えが1つに決まって読み取りもできるものを選びます。誤り訂正は下で選んだレベル以上から探します</div>
+            <label class="qr-check-row">
+              <input type="checkbox" id="qr-allow-suffix" checked>
+              <span data-i18n="search.allowSuffix">URLの末尾に #数字 を付けてよい（開くページは同じ）</span>
+            </label>
+            <div class="ps-row">
+              <button class="btn-primary" id="qr-btn-search" data-i18n="search.qrRun">🔎 解けるQRを探す</button>
+              <button class="btn-danger ps-cancel" id="qr-btn-search-cancel" style="display:none" data-i18n="common.cancel">✕ 中止</button>
+            </div>
+            <div class="ps-progress" id="qr-search-progress" style="display:none"><div class="ps-bar" id="qr-search-bar"></div></div>
+            <div class="ps-result" id="qr-search-result" aria-live="polite"></div>
           </div>
         </section>
 
@@ -642,6 +679,7 @@
 <script src="js/main.js"></script>
 <script src="js/layout.js"></script>
 <script src="js/ai-import.js"></script>
+<script src="js/puzzle-search.js"></script>
 
 <!-- ── 問題作成タブ JS ── -->
 <script src="creator/image-proc.js"></script>

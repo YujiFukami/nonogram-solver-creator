@@ -12,6 +12,8 @@ const QrCreator = (() => {
   let _lastSolverResult = null;  // 検証結果（未解決部分追加用）
   let _validating       = false; // 検証実行中フラグ
   let _cancelValidation = false; // キャンセル要求フラグ
+  let _override = null;   // 「解けるQRを探す」で選んだ { text, ec, mask }（手で設定を変えると解除）
+  let _search   = null;   // 実行中の探索
 
   // ─── DOM 参照 ──────────────────────────────────────────
   const $q = id => document.getElementById(id);
@@ -47,10 +49,20 @@ const QrCreator = (() => {
       qrCanvas:      $q('qr-preview-canvas'),
       infoText:      $q('qr-info-text'),
       gridWrap:      $q('qr-grid-wrap'),
+      allowSuffix:     $q('qr-allow-suffix'),
+      btnSearch:       $q('qr-btn-search'),
+      btnSearchCancel: $q('qr-btn-search-cancel'),
+      searchProgress:  $q('qr-search-progress'),
+      searchBar:       $q('qr-search-bar'),
+      searchResult:    $q('qr-search-result'),
     };
 
-    el.generateBtn.addEventListener('click', generate);
-    el.urlInput.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+    el.generateBtn.addEventListener('click', () => { _clearOverride(); generate(); });
+    el.urlInput.addEventListener('keydown', e => { if (e.key === 'Enter') { _clearOverride(); generate(); } });
+
+    // 解けるQRを探す
+    el.btnSearch.addEventListener('click', _searchSolvable);
+    el.btnSearchCancel.addEventListener('click', () => { if (_search) _search.cancel(); });
     el.sendBtn.addEventListener('click', sendToSolver);
     el.saveBtn.addEventListener('click', saveAsTxt);
     el.printBtn.addEventListener('click', () => {
@@ -61,7 +73,7 @@ const QrCreator = (() => {
     });
 
     // スライダー等変更時に自動再生成
-    el.ecBtns.forEach(btn => btn.addEventListener('change', () => { if (_qrGrid) generate(); }));
+    el.ecBtns.forEach(btn => btn.addEventListener('change', () => { _clearOverride(); if (_qrGrid) generate(); }));
     el.quietZone.addEventListener('change', () => { if (_qrGrid) generate(); });
 
     // 斜め接続補正
@@ -98,8 +110,15 @@ const QrCreator = (() => {
   }
 
   // ─── QRコード生成 ─────────────────────────────────────
+  function _clearOverride() {
+    if (!_override) return;
+    _override = null;
+    el.searchResult.textContent = '';
+    el.searchResult.className = 'ps-result';
+  }
+
   function generate() {
-    const url = el.urlInput.value.trim();
+    const url = _override ? _override.text : el.urlInput.value.trim();
     if (!url) {
       el.infoText.textContent = 'URLを入力してください';
       el.infoText.style.color = 'var(--color-danger)';
@@ -108,8 +127,9 @@ const QrCreator = (() => {
 
     let qr;
     try {
-      qr = qrcode(0, getEC());   // type 0 = 自動
+      qr = qrcode(0, _override ? _override.ec : getEC());   // type 0 = 自動
       qr.addData(url, 'Byte');
+      if (_override) qr.setMaskPattern(_override.mask);       // 探索で選んだマスク
       qr.make();
     } catch (e) {
       el.infoText.textContent = `生成エラー: ${e.message}`;
@@ -181,6 +201,80 @@ const QrCreator = (() => {
     el.validateResult.className   = '';
     _lastSolverResult = null;
     el.btnFillUnsolved.disabled = true;
+  }
+
+  // ─── 解けるQRを探す ───────────────────────────────────
+  function _searchSolvable() {
+    const text = el.urlInput.value.trim();
+    if (!text) {
+      el.searchResult.className = 'ps-result ng';
+      el.searchResult.textContent = 'URLを入力してください';
+      return;
+    }
+    if (_search) return;
+
+    el.btnSearch.disabled = true;
+    el.btnSearchCancel.style.display = '';
+    el.searchProgress.style.display = '';
+    el.searchBar.style.width = '0%';
+    el.searchResult.className = 'ps-result';
+    el.searchResult.textContent = '探しています…';
+
+    _search = PuzzleSearchClient.run('qr',
+      { text, minEc: getEC(), allowSuffix: el.allowSuffix.checked },
+      (done, total) => { el.searchBar.style.width = Math.round(done / total * 100) + '%'; });
+
+    _search.promise.then(res => {
+      if (res.cancelled) {
+        el.searchResult.className = 'ps-result';
+        el.searchResult.textContent = '⏹ 中止しました';
+        return;
+      }
+      el.searchBar.style.width = '100%';
+
+      // 見つかった（または最良の）QRを表示する。
+      // 斜め接続補正・外枠・ノイズは盤面を変えて解けなくするため外す
+      _override = { text: res.text, ec: res.ec, mask: res.mask };
+      el.ecBtns.forEach(b => { b.checked = (b.value === res.ec); });
+      [el.diagBridge, el.borderFill, el.noiseEnabled].forEach(cb => { cb.checked = false; });
+      el.diagSizeRow.style.display = 'none';
+      el.noiseRow.style.display = 'none';
+      generate();
+
+      const sub = [];
+      sub.push(`誤り訂正 ${res.ec}・マスク ${res.mask}・${res.n}×${res.n}`);
+      if (res.suffix) sub.push(`読み取ると「${res.text}」になります（開くページは同じです）`);
+      if (res.decoded === true) sub.push('読み取りできることを確認済み');
+      else if (res.decoded === null) sub.push('読み取りの確認はできませんでした（スマホで確かめてください）');
+      sub.push(`${res.tried}通りを試しました（${(res.ms / 1000).toFixed(1)}秒）`);
+
+      if (res.found) {
+        el.searchResult.className = 'ps-result ok';
+        el.searchResult.innerHTML = '✅ 答えが1つに決まるQRが見つかりました' + sub.map(t => `<span class="ps-sub">${_esc(t)}</span>`).join('');
+        el.validateResult.textContent = '✅ 唯一解あり（探索で確認）';
+        el.validateResult.className   = 'validate-ok';
+      } else {
+        const hint = [];
+        if (!res.suffixAllowed && el.allowSuffix.checked === false) hint.push('「#数字を付けてよい」をオンにする');
+        if (getEC() !== 'L') hint.push('誤り訂正のレベルを下げる');
+        el.searchResult.className = 'ps-result warn';
+        el.searchResult.innerHTML = `⚠ 完全に解けるQRは見つかりませんでした。最も解ける候補（${Math.floor(res.rate * 1000) / 10}%）を表示しています`
+          + (hint.length ? `<span class="ps-sub">${_esc(hint.join('、'))}と見つかることがあります</span>` : '')
+          + sub.map(t => `<span class="ps-sub">${_esc(t)}</span>`).join('');
+      }
+    }).catch(err => {
+      el.searchResult.className = 'ps-result ng';
+      el.searchResult.textContent = 'エラー: ' + err.message;
+    }).finally(() => {
+      _search = null;
+      el.btnSearch.disabled = false;
+      el.btnSearchCancel.style.display = 'none';
+      setTimeout(() => { el.searchProgress.style.display = 'none'; }, 600);
+    });
+  }
+
+  function _esc(t) {
+    return String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   }
 
   // ─── QRプレビュー描画 ─────────────────────────────────

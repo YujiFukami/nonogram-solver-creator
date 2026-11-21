@@ -37,8 +37,14 @@ var qrcode = function() {
     var _moduleCount = 0;
     var _dataCache = null;
     var _dataList = [];
+    var _forcedMask = null; // [追加] マスクを固定する（解けるQRの探索用）
 
     var _this = {};
+
+    /** [追加] マスクパターン(0-7)を固定する。null で自動選択に戻す */
+    _this.setMaskPattern = function(mask) {
+      _forcedMask = (mask === null || mask === undefined) ? null : mask;
+    };
 
     var makeImpl = function(test, maskPattern) {
 
@@ -449,7 +455,7 @@ var qrcode = function() {
         _typeNumber = typeNumber;
       }
 
-      makeImpl(false, getBestMaskPattern() );
+      makeImpl(false, _forcedMask !== null ? _forcedMask : getBestMaskPattern() );
     };
 
     _this.createTableTag = function(cellSize, margin) {
@@ -2283,6 +2289,10 @@ var qrcode = function() {
     }
     return toUTF8Array(s);
   };
+
+  // [追加] 日本語などを正しく読み取れるよう、Byte モードは UTF-8 で符号化する
+  //        （既定の 'default' は文字コードの下位8ビットだけを使うため、ASCII 以外が壊れる）
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
 
 }();
 
