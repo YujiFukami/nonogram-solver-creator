@@ -11,6 +11,10 @@ function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.tab === tabId);
   });
+  // 表示されたタブが盤面の大きさを測り直せるよう知らせる
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new CustomEvent('layoutresize', { detail: { tab: tabId, reason: 'tab' } }));
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

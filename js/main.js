@@ -136,6 +136,34 @@ function loadSampleByIndex(index) {
   autoZoomFit();
 }
 
+/**
+ * ヒントデータを解答タブに反映する（AIの読み取りデータの貼り付けなどから使う）
+ * @param {number} rows
+ * @param {number} cols
+ * @param {number[][]} rowHints
+ * @param {number[][]} colHints
+ * @param {string} name     保存時のファイル名
+ * @param {string} message  ステータス欄に出す文
+ * @param {string} type     'success' | 'error' | ''
+ */
+function applyPuzzleData(rows, cols, rowHints, colHints, name, message, type = 'success') {
+  switchTab('solver');
+
+  App.rows = rows;
+  App.cols = cols;
+  el.inputRows.value = rows;
+  el.inputCols.value = cols;
+
+  App.gridCanvas.resize(rows, cols);
+  App.hintInput.resize(rows, cols);
+  App.hintInput.setHints(rowHints, colHints);
+  updateSolveRate(0);
+
+  App.puzzleName = name || 'nonogram';
+  setStatus(message || `問題を読み込みました (${rows}×${cols})`, type);
+  autoZoomFit();
+}
+
 /** サンプル選択モーダルを開く */
 function openSampleModal() {
   const overlay = document.getElementById('sample-modal-overlay');

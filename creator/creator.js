@@ -13,6 +13,10 @@ const Creator = (() => {
   let _lastSolverResult = null;
   let _validating       = false;
   let _cancelValidation = false;
+  let _userZoomed       = false; // 利用者がセルサイズを手で決めたら true（自動拡大しない）
+
+  const PREVIEW_H_KEY     = 'creator.previewHeight';
+  const PREVIEW_H_DEFAULT = 300;
 
   let _settings = {
     mode:       'threshold',
@@ -95,6 +99,7 @@ const Creator = (() => {
 
     // セルサイズ変更通知（ズームモードのホイール操作時）
     _editor.onCellSizeChange = (cs) => {
+      _userZoomed = true;
       el.zoom.value = cs;
       _settings.zoomPx = cs;
       el.zoomVal.textContent = cs + 'px';
@@ -102,7 +107,39 @@ const Creator = (() => {
 
     _cropTool = new CropTool(el.cropCanvas, _onCropChange);
 
+    _restorePreviewHeight();
     _bindEvents();
+
+    // 画面・左メニュー・タブの切り替えで表示領域が変わったら合わせ直す
+    let _rafId = 0;
+    const _onLayoutChange = (e) => {
+      const tab = e && e.detail && e.detail.tab;
+      if (tab && tab !== 'creator') return;
+      cancelAnimationFrame(_rafId);
+      _rafId = requestAnimationFrame(() => _relayout());
+    };
+    window.addEventListener('resize', _onLayoutChange);
+    window.addEventListener('layoutresize', _onLayoutChange);
+  }
+
+  /** 問題作成タブが表示中なら、プレビューと問題の大きさを今の領域に合わせ直す */
+  function _relayout() {
+    const tab = document.getElementById('tab-creator');
+    if (!tab || !tab.classList.contains('active') || !_img) return;
+    _layoutPreviews(true);
+    _refitGrid();
+  }
+
+  /** 自動拡大中なら、生成された問題を表示領域いっぱいに合わせる */
+  function _refitGrid() {
+    if (!_img || _userZoomed || !_editor.getGrid()) return;
+    _editor.setCellSizeOverride(null);
+    const cs = _editor.getCellSize();
+    if (cs) {
+      el.zoom.value    = cs;
+      _settings.zoomPx = cs;
+    }
+    _updateZoomLabel();
   }
 
   // ─── イベントバインド ─────────────────────────────────────
@@ -186,6 +223,7 @@ const Creator = (() => {
 
     // 倍率（1px単位）
     el.zoom.addEventListener('input', () => {
+      _userZoomed = true;
       _settings.zoomPx = parseInt(el.zoom.value);
       _editor.setCellSizeOverride(_settings.zoomPx);
       el.zoomVal.textContent = _editor.getCellSize() + 'px';
@@ -206,6 +244,7 @@ const Creator = (() => {
       _settings.cols = Math.max(1, Math.min(500, parseInt(el.cols.value) || 30));
       el.cols.value  = _settings.cols;
       _settings.zoomPx = 0; // サイズ変更時はautoに戻す
+      _userZoomed = false;
       if (_settings.autoRows) _calcAutoRows();
       _update();
     });
@@ -215,6 +254,7 @@ const Creator = (() => {
       _settings.autoRows = false;
       el.autoRows.checked = false;
       _settings.zoomPx = 0;
+      _userZoomed = false;
       _update();
     });
     el.autoRows.addEventListener('change', () => {
@@ -241,6 +281,7 @@ const Creator = (() => {
       el.dropZone.style.display     = visible ? 'none' : '';
       el.resizeHandle.style.display = visible ? 'none' : '';
       el.btnTogglePreview.textContent = visible ? '▼ プレビュー' : '▲ 隠す';
+      requestAnimationFrame(() => _relayout());
     });
 
     // リサイズハンドル（プレビュー↔グリッド境界のドラッグ）
@@ -294,25 +335,75 @@ const Creator = (() => {
 
   // ─── リサイズハンドル ─────────────────────────────────────
 
+  /** 区切り線のドラッグで、上のプレビューと下の問題の高さを分ける（マウス・タッチ両対応） */
   function _bindResizeHandle() {
     const handle = el.resizeHandle;
     if (!handle) return;
 
-    let dragging = false, startY = 0, startH = 0;
+    let startY = 0, startH = 0, pointerId = null, rafId = 0;
 
-    handle.addEventListener('mousedown', e => {
-      dragging = true;
-      startY   = e.clientY;
-      startH   = el.dropZone.offsetHeight;
+    handle.title = 'ドラッグで高さを調整（ダブルクリックで元に戻す）';
+
+    handle.addEventListener('pointerdown', e => {
+      if (e.button !== undefined && e.button !== 0) return;
+      pointerId = e.pointerId;
+      startY    = e.clientY;
+      startH    = el.dropZone.offsetHeight;
+      try { handle.setPointerCapture(pointerId); } catch (err) { /* 取れなくてもドラッグは続ける */ }
+      handle.classList.add('dragging');
+      document.body.classList.add('is-row-resizing');
       e.preventDefault();
     });
-    document.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      const newH = Math.max(60, Math.min(600, startH + (e.clientY - startY)));
-      el.dropZone.style.height    = newH + 'px';
-      el.dropZone.style.flexShrink = '0';
+
+    handle.addEventListener('pointermove', e => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
+      _setPreviewHeight(startH + (e.clientY - startY));
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => _layoutPreviews(true));
     });
-    document.addEventListener('mouseup', () => { dragging = false; });
+
+    const _end = e => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
+      pointerId = null;
+      handle.classList.remove('dragging');
+      document.body.classList.remove('is-row-resizing');
+      _savePreviewHeight();
+      _relayout();
+    };
+    handle.addEventListener('pointerup', _end);
+    handle.addEventListener('pointercancel', _end);
+
+    // ダブルクリックで初期の高さへ
+    handle.addEventListener('dblclick', () => {
+      _setPreviewHeight(PREVIEW_H_DEFAULT);
+      _savePreviewHeight();
+      _relayout();
+    });
+  }
+
+  function _previewMaxHeight() {
+    const main  = el.dropZone.parentElement;
+    const mainH = main ? main.clientHeight : 0;
+    // 下の問題エリアに最低 120px は残す
+    return mainH > 0 ? Math.max(80, mainH - 120) : 800;
+  }
+
+  function _setPreviewHeight(h) {
+    const clamped = Math.round(Math.max(80, Math.min(_previewMaxHeight(), h)));
+    el.dropZone.style.setProperty('--cr-preview-h', clamped + 'px');
+  }
+
+  function _savePreviewHeight() {
+    try { localStorage.setItem(PREVIEW_H_KEY, String(el.dropZone.offsetHeight)); } catch (e) { /* 保存できなくても続ける */ }
+  }
+
+  function _restorePreviewHeight() {
+    let h = PREVIEW_H_DEFAULT;
+    try {
+      const saved = parseInt(localStorage.getItem(PREVIEW_H_KEY), 10);
+      if (saved > 0) h = saved;
+    } catch (e) { /* 既定値を使う */ }
+    el.dropZone.style.setProperty('--cr-preview-h', h + 'px');
   }
 
   // ─── 画像ロード ──────────────────────────────────────────
@@ -330,30 +421,78 @@ const Creator = (() => {
   }
 
   function _setupPreviews() {
-    const box   = el.origCanvas.parentElement;
-    const maxW  = box.clientWidth  || 380;
-    const maxH  = 280;
-    const scale = Math.min(maxW / _img.naturalWidth, maxH / _img.naturalHeight, 1);
-    const dispW = Math.max(1, Math.round(_img.naturalWidth  * scale));
-    const dispH = Math.max(1, Math.round(_img.naturalHeight * scale));
-
-    el.origCanvas.width  = dispW;
-    el.origCanvas.height = dispH;
-    el.origCanvas.getContext('2d').drawImage(_img, 0, 0, dispW, dispH);
-
-    el.bwCanvas.width  = dispW;
-    el.bwCanvas.height = dispH;
-
-    _cropTool.setImage(_img, dispW, dispH);
-
     const hint    = document.getElementById('cr-drop-hint');
     const preview = document.getElementById('cr-preview-row');
     if (hint)    hint.style.display    = 'none';
     if (preview) preview.style.display = 'flex';
 
+    _layoutPreviews(false);
+
     _settings.zoomPx = 0; // 新画像読み込み時はauto
+    _userZoomed = false;
     if (_settings.autoRows) _calcAutoRows();
     _update();
+  }
+
+  /** プレビュー1枚に使える幅と高さ（区切り線で決めた高さに合わせる） */
+  function _previewArea() {
+    const box    = el.origCanvas.closest('.cr-preview-box') || el.origCanvas.parentElement;
+    const label  = box ? box.querySelector('.cr-preview-label') : null;
+    const row    = document.getElementById('cr-preview-row');
+    const zs     = getComputedStyle(el.dropZone);
+    const padY   = parseFloat(zs.paddingTop) + parseFloat(zs.paddingBottom);
+    const labelH = label ? label.offsetHeight + 4 : 0;
+
+    const maxW = (box && box.clientWidth) || 380;
+    let maxH = el.dropZone.clientHeight - padY - 2;
+    // スマホ幅ではプレビューが縦に2枚並ぶ
+    const stacked = row && getComputedStyle(row).flexDirection === 'column';
+    if (stacked) maxH = Math.floor((maxH - 12) / 2);
+    maxH -= labelH;
+    return { maxW: Math.max(20, maxW), maxH: Math.max(20, maxH) };
+  }
+
+  /**
+   * 元画像プレビューを表示領域に合わせて描き直す
+   * @param {boolean} keepCrop  true なら今のトリミング枠を保ち、白黒プレビューも描き直す
+   */
+  function _layoutPreviews(keepCrop) {
+    if (!_img) return;
+    const crop = keepCrop ? _cropTool.getCropRect() : null;
+    const { maxW, maxH } = _previewArea();
+    const scale = Math.min(maxW / _img.naturalWidth, maxH / _img.naturalHeight);
+    const dispW = Math.max(1, Math.round(_img.naturalWidth  * scale));
+    const dispH = Math.max(1, Math.round(_img.naturalHeight * scale));
+
+    const sizeChanged = el.origCanvas.width !== dispW || el.origCanvas.height !== dispH;
+    if (!keepCrop || sizeChanged) {
+      el.origCanvas.width  = dispW;
+      el.origCanvas.height = dispH;
+      el.origCanvas.getContext('2d').drawImage(_img, 0, 0, dispW, dispH);
+
+      _cropTool.setImage(_img, dispW, dispH);
+      if (crop) _cropTool.setCrop(crop);
+    }
+
+    if (keepCrop) _renderBwPreview();
+  }
+
+  /** 白黒プレビュー（トリミング範囲＋グリッド線）を描く */
+  function _renderBwPreview() {
+    if (!_img) return;
+    const crop = _cropTool.getCropRect();
+    const { maxW, maxH } = _previewArea();
+    const cropAspect = crop.w / Math.max(1, crop.h);
+    let bwW = maxW;
+    let bwH = Math.round(bwW / cropAspect);
+    if (bwH > maxH) { bwH = maxH; bwW = Math.round(bwH * cropAspect); }
+    bwW = Math.max(1, bwW); bwH = Math.max(1, bwH);
+    if (el.bwCanvas.width !== bwW || el.bwCanvas.height !== bwH) {
+      el.bwCanvas.width  = bwW;
+      el.bwCanvas.height = bwH;
+    }
+    ImageProcessor.renderPreview(_img, crop, el.bwCanvas, _settings);
+    _drawGridOverlay(el.bwCanvas, _settings.cols, _settings.rows);
   }
 
   function _calcAutoRows() {
@@ -375,24 +514,11 @@ const Creator = (() => {
     if (!_img) return;
     const crop = _cropTool.getCropRect();
 
-    // bwCanvas リサイズ
-    const bwBox = el.bwCanvas.parentElement;
-    const maxW  = (bwBox ? bwBox.clientWidth : 0) || 380;
-    const cropAspect = crop.w / Math.max(1, crop.h);
-    let bwW = Math.min(maxW, 380);
-    let bwH = Math.round(bwW / cropAspect);
-    if (bwH > 280) { bwH = 280; bwW = Math.round(bwH * cropAspect); }
-    bwW = Math.max(1, bwW); bwH = Math.max(1, bwH);
-    if (el.bwCanvas.width !== bwW || el.bwCanvas.height !== bwH) {
-      el.bwCanvas.width  = bwW;
-      el.bwCanvas.height = bwH;
-    }
-
-    ImageProcessor.renderPreview(_img, crop, el.bwCanvas, _settings);
-    _drawGridOverlay(el.bwCanvas, _settings.cols, _settings.rows);
+    _renderBwPreview();
 
     // gridエディタにセルサイズ上書きを設定してから setGrid
-    if (_settings.zoomPx > 0) {
+    // （手でズームしていなければ毎回、表示領域いっぱいに自動拡大する）
+    if (_userZoomed && _settings.zoomPx > 0) {
       _editor.setCellSizeOverride(_settings.zoomPx);
     } else {
       _editor.setCellSizeOverride(null); // auto
@@ -408,8 +534,8 @@ const Creator = (() => {
     _editor.setReferenceImage(_img, crop);
     _editor.setRefOpacity(_settings.overlayOpacity / 100);
 
-    // zoomPx=0(auto)のとき、実際のセルサイズをスライダーに反映
-    if (_settings.zoomPx === 0) {
+    // 自動拡大のとき、実際のセルサイズをスライダーに反映
+    if (!_userZoomed) {
       const cs = _editor.getCellSize();
       if (cs) {
         el.zoom.value = cs;
@@ -699,20 +825,11 @@ const Creator = (() => {
         el.puzzleName.value = proj.name || 'nonogram';
 
         // プレビューキャンバスセットアップ（_update は呼ばない）
-        const box   = el.origCanvas.parentElement;
-        const maxW  = box.clientWidth || 380;
-        const maxH  = 280;
-        const scale = Math.min(maxW / _img.naturalWidth, maxH / _img.naturalHeight, 1);
-        const dispW = Math.max(1, Math.round(_img.naturalWidth  * scale));
-        const dispH = Math.max(1, Math.round(_img.naturalHeight * scale));
-        el.origCanvas.width = dispW; el.origCanvas.height = dispH;
-        el.origCanvas.getContext('2d').drawImage(_img, 0, 0, dispW, dispH);
-        el.bwCanvas.width = dispW; el.bwCanvas.height = dispH;
-        _cropTool.setImage(_img, dispW, dispH);
         const hint    = document.getElementById('cr-drop-hint');
         const preview = document.getElementById('cr-preview-row');
         if (hint)    hint.style.display    = 'none';
         if (preview) preview.style.display = 'flex';
+        _layoutPreviews(false);
 
         // 設定を復元
         if (proj.settings) Object.assign(_settings, proj.settings);
@@ -723,8 +840,11 @@ const Creator = (() => {
 
         // BW プレビューを描画
         const crop = _cropTool.getCropRect();
-        ImageProcessor.renderPreview(_img, crop, el.bwCanvas, _settings);
-        _drawGridOverlay(el.bwCanvas, _settings.cols, _settings.rows);
+        _renderBwPreview();
+
+        // 保存時のセルサイズは使わず、今の表示領域に合わせて自動拡大する
+        _userZoomed = false;
+        _settings.zoomPx = 0;
 
         // グリッドを復元
         if (proj.grid && proj.grid.length > 0) {
@@ -734,8 +854,7 @@ const Creator = (() => {
           el.cols.value = _settings.cols;
           const grid = proj.grid.map(r => Uint8Array.from(r));
           const { rowHints, colHints } = ImageProcessor.generateHints(grid);
-          if (_settings.zoomPx > 0) _editor.setCellSizeOverride(_settings.zoomPx);
-          else _editor.setCellSizeOverride(null);
+          _editor.setCellSizeOverride(null);
           _editor.setGrid(grid, rowHints, colHints);
           _editor.setShowHints(_showHints);
           _editor.setBrushSize(_settings.brushSize);
@@ -746,7 +865,7 @@ const Creator = (() => {
 
         _updateZoomModeBtn();
         _updateEdgeBoostVisibility();
-        _updateZoomLabel();
+        _refitGrid();
       };
       img.src = proj.imageData;
     };

@@ -87,6 +87,8 @@ I18n.register('ja', {
   'creator.projectSave': '📦 保存',
   'creator.projectLoad': '📂 読込',
   'creator.print': '🖨 印刷用PDF',
+  'layout.openMenu': 'メニューを開く',
+  'layout.closeMenu': 'メニューをたたむ',
   'creator.hidePreview': '▲ 隠す',
   'creator.showPreview': '▼ プレビュー',
   'creator.origLabel': '元画像（トリミング枠）',
@@ -131,6 +133,19 @@ I18n.register('ja', {
 
   // ── サンプル問題 ──
   'solver.sampleSelect': '📋 サンプルから選ぶ',
+  'aiImport.open': '📷 画像からAIで読込',
+  'aiImport.title': '📷 画像からAIで問題を読み込む',
+  'aiImport.intro': 'お使いのAI（ChatGPT・Gemini・Claude など）に問題の画像を読ませて、ヒントのデータを作ってもらいます。料金はかかりません（お使いのAIの範囲内）。',
+  'aiImport.step1': 'プロンプトをコピーする',
+  'aiImport.copy': '📋 プロンプトをコピー',
+  'aiImport.showPrompt': 'プロンプトの中身を見る',
+  'aiImport.step2': 'AIを開き、プロンプトと問題の画像を送る',
+  'aiImport.tip1': '問題の部分だけを、真上から影が入らないように撮ると正確になります。',
+  'aiImport.tip2': '大きい問題は「上のヒント」「左のヒント」に分けて撮り、複数枚まとめて送ってください。',
+  'aiImport.tip3': 'AIの答えのコードブロックにある「コピー」ボタンで、結果をコピーします。',
+  'aiImport.step3': 'AIの答えを貼り付けて読み込む',
+  'aiImport.paste': '📥 クリップボードから貼り付け',
+  'aiImport.load': '✔ 解答タブに読み込む',
   'solver.sampleModalTitle': '📂 サンプル問題を選択',
 
   // ── 言語名（自身の言語名） ──

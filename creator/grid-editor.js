@@ -117,8 +117,12 @@ class GridEditor {
     this._hintCols = this._showHints ? Math.max(1, ...this._rowHints.map(h => h.length)) : 0;
     this._hintRows = this._showHints ? Math.max(1, ...this._colHints.map(h => h.length)) : 0;
 
-    const contW = this._container.clientWidth  || 700;
-    const contH = this._container.clientHeight || 450;
+    // 表示領域（余白を除く）。layout.css で #cr-grid-wrap が残りの領域いっぱいに広がる
+    const st   = getComputedStyle(this._container);
+    const padX = (parseFloat(st.paddingLeft) || 0) + (parseFloat(st.paddingRight)  || 0);
+    const padY = (parseFloat(st.paddingTop)  || 0) + (parseFloat(st.paddingBottom) || 0);
+    const contW = (this._container.clientWidth  - padX) || 700;
+    const contH = (this._container.clientHeight - padY) || 450;
 
     const HCW = this._showHints ? 18 : 0;
     const HRH = this._showHints ? 14 : 0;

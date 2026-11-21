@@ -87,6 +87,8 @@ I18n.register('tr', {
   'creator.projectSave': '📦 Kaydet',
   'creator.projectLoad': '📂 Yükle',
   'creator.print': '🖨 Yazdırılabilir PDF',
+  'layout.openMenu': 'Menüyü aç',
+  'layout.closeMenu': 'Menüyü daralt',
   'creator.hidePreview': '▲ Gizle',
   'creator.showPreview': '▼ Önizleme',
   'creator.origLabel': 'Orijinal resim (kırpma çerçevesi)',
@@ -131,6 +133,19 @@ I18n.register('tr', {
 
   // ── Örnek bulmaca ──
   'solver.sampleSelect': '📋 Örnekten seç',
+  'aiImport.open': '📷 Import from image (AI)',
+  'aiImport.title': '📷 Import a puzzle from an image with AI',
+  'aiImport.intro': 'Let your own AI (ChatGPT, Gemini, Claude, etc.) read the puzzle image and write out the clues. No extra cost (within your AI plan).',
+  'aiImport.step1': 'Copy the prompt',
+  'aiImport.copy': '📋 Copy prompt',
+  'aiImport.showPrompt': 'Show the prompt',
+  'aiImport.step2': 'Open an AI and send the prompt with the puzzle image',
+  'aiImport.tip1': 'Photograph only the puzzle, straight from above and without shadows, for best accuracy.',
+  'aiImport.tip2': 'For large puzzles, take separate photos of the top clues and the left clues and send them together.',
+  'aiImport.tip3': 'Use the copy button on the AI\'s code block to copy the result.',
+  'aiImport.step3': 'Paste the AI\'s answer and import',
+  'aiImport.paste': '📥 Paste from clipboard',
+  'aiImport.load': '✔ Load into solver',
   'solver.sampleModalTitle': '📂 Örnek bulmaca seçin',
 
   // ── Dil adı ──

@@ -1,0 +1,193 @@
+/* ══════════════════════════════════════════════════════════
+   layout.css — 画面レイアウトの改善（全タブ共通）
+   style.css / creator.css / qr-creator.css の後に読み込む
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 左メニューの開閉バー ─────────────────────────────────── */
+.has-side-panel { position: relative; }
+
+.panel-toggle {
+  flex: 0 0 14px;
+  width: 14px;
+  padding: 0;
+  border-radius: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-panel);
+  color: var(--color-muted);
+  font-size: 9px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.panel-toggle:hover {
+  background: #eff6ff;
+  color: var(--color-primary);
+}
+.panel-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+/* メイン領域が中身に押し広げられて画面幅を超えないようにする */
+#puzzle-area, #creator-main, #qr-main { min-width: 0; }
+#hint-input-field { min-width: 0; }
+#hint-input-label { min-width: 0; }
+
+/* 閉じた状態 */
+.panel-collapsed { display: none !important; }
+
+/* QRタブの左メニュー幅を他タブとそろえる */
+#qr-panel {
+  width: var(--panel-width);
+  min-width: 0;
+}
+
+/* ── 区画（見出しクリックで折りたたみ） ───────────────────── */
+.panel-section.is-collapsible > h3 {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+.panel-section.is-collapsible > h3:hover { color: var(--color-primary); }
+.panel-section.is-collapsible > h3::after {
+  content: '▾';
+  margin-left: auto;
+  font-size: 11px;
+  transition: transform .15s;
+}
+.panel-section.sec-collapsed > h3::after { transform: rotate(-90deg); }
+.panel-section.sec-collapsed > :not(h3) { display: none !important; }
+
+/* ── 主なボタンの区画を左メニュー下に常に表示 ─────────────── */
+.panel-actions {
+  position: sticky;
+  bottom: -8px;            /* パネルの下余白(8px)まで覆う */
+  margin-top: auto;
+  padding-top: 6px;
+  padding-bottom: 8px;
+  background: var(--color-panel);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -6px 8px -6px rgba(0,0,0,.15);
+  z-index: 2;
+}
+#qr-panel .panel-actions { padding-left: 8px; padding-right: 8px; }
+#qr-panel { display: flex; flex-direction: column; }
+
+/* ── 左メニュー内のボタン: 文字を途中で折り返さない ─────────── */
+#side-panel button,
+#creator-panel button,
+#qr-panel button {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-grid-2 > button {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 12px;
+}
+
+/* ── 検証: ボタンと色の欄を1行に ──────────────────────────── */
+.validate-row { gap: 4px; flex-wrap: nowrap; }
+.validate-row > button {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+.validate-row > input[type="color"] {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fff;
+  cursor: pointer;
+}
+
+/* ── 問題作成: プレビューと問題の区切り ───────────────────── */
+#cr-drop-zone {
+  height: var(--cr-preview-h, 300px);
+  display: flex;
+  flex-direction: column;
+}
+#cr-drop-hint {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+#cr-preview-row {
+  flex: 1;
+  min-height: 0;
+}
+#cr-resize-handle {
+  position: relative;
+  height: 10px;
+  touch-action: none;
+}
+#cr-resize-handle::after {          /* つまみの目印 */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 4px;
+  transform: translate(-50%, -50%);
+  border-top: 1px solid rgba(0,0,0,.35);
+  border-bottom: 1px solid rgba(0,0,0,.35);
+}
+#cr-resize-handle.dragging { background: var(--color-primary); }
+body.is-row-resizing,
+body.is-row-resizing * { cursor: row-resize !important; user-select: none !important; }
+
+/* 生成された問題: 表示領域いっぱいを使う（自動拡大の基準になる） */
+#cr-grid-wrap {
+  display: block;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+/* ── スマホ幅 ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  /* 左メニューは盤面の上に重ねて開く */
+  .has-side-panel > aside {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 14px;
+    z-index: 60;
+    width: min(260px, calc(100vw - 40px)) !important;
+    min-width: 0 !important;
+    box-shadow: 4px 0 16px rgba(0,0,0,.25);
+  }
+  .panel-toggle {
+    flex-basis: 18px;
+    width: 18px;
+    font-size: 10px;
+  }
+  .has-side-panel > aside { left: 18px; }
+
+  /* ヘッダー: 題名を1行に収め、ロゴは隠す */
+  #header { padding: 0 8px; gap: 8px; }
+  #header h1 {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #header-right { gap: 6px; flex-shrink: 0; }
+  #header-logo-link { display: none; }
+  #lang-select { max-width: 92px; }
+  #solve-rate-display { padding: 2px 8px; font-size: 12px; white-space: nowrap; }
+
+  /* 問題作成: プレビューは縦に並べる */
+  #cr-preview-row { flex-direction: column; overflow: auto; }
+}

@@ -56,6 +56,8 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="creator/creator.css">
   <link rel="stylesheet" href="qr/qr-creator.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/ai-import.css">
 </head>
 <body>
 <div id="app">
@@ -113,6 +115,7 @@
           <button class="btn-file" id="btn-save" data-i18n="solver.save">💾 保存</button>
         </div>
         <button class="btn-file btn-sample" id="btn-sample" data-i18n="solver.sampleSelect">📋 サンプルから選ぶ</button>
+        <button class="btn-file btn-ai-import" id="btn-ai-import" data-i18n="aiImport.open">📷 画像からAIで読込</button>
         <button class="btn-file" id="btn-save-image" data-i18n="solver.saveImage">🖼 画像として保存</button>
         <label style="font-size:11px;display:flex;align-items:center;gap:5px;margin-top:3px;cursor:pointer;">
           <input type="checkbox" id="chk-save-with-hints"> <span data-i18n="solver.saveWithHints">ヒント数字を含む</span>
@@ -339,8 +342,8 @@
           </div>
         </section>
 
-        <!-- 出力 -->
-        <section class="panel-section">
+        <!-- 出力（左メニュー下に常に表示） -->
+        <section class="panel-section panel-actions">
           <h3 data-i18n="creator.output">📤 出力</h3>
           <input type="text" id="cr-puzzle-name" value="nonogram" data-i18n-placeholder="creator.puzzleName" placeholder="問題名">
           <button class="btn-primary" id="cr-btn-transfer" data-i18n="creator.transfer">➡ 解答タブへ渡す</button>
@@ -492,7 +495,7 @@
           </div>
         </section>
 
-        <section class="panel-section">
+        <section class="panel-section panel-actions">
           <h3 data-i18n="qr.output">出力</h3>
           <div style="padding:0 8px; display:flex; flex-direction:column; gap:6px;">
             <input type="text" id="qr-puzzle-name" data-i18n-placeholder="qr.puzzleName" placeholder="問題名" value="qr-nonogram"
@@ -554,6 +557,63 @@
   </div>
 </div>
 
+<!-- AIの読み取りデータ貼り付けダイアログ -->
+<div id="ai-import-overlay" style="display:none;">
+  <div id="ai-import-modal" role="dialog" aria-modal="true" aria-labelledby="ai-import-title">
+    <div id="ai-import-header">
+      <h3 id="ai-import-title" data-i18n="aiImport.title">📷 画像からAIで問題を読み込む</h3>
+      <button id="ai-import-close" type="button" aria-label="閉じる">✕</button>
+    </div>
+    <div id="ai-import-body">
+      <p class="ai-intro" data-i18n="aiImport.intro">お使いのAI（ChatGPT・Gemini・Claude など）に問題の画像を読ませて、ヒントのデータを作ってもらいます。料金はかかりません（お使いのAIの範囲内）。</p>
+
+      <section class="ai-step">
+        <div class="ai-step-no">1</div>
+        <div class="ai-step-main">
+          <h4 data-i18n="aiImport.step1">プロンプトをコピーする</h4>
+          <div class="ai-row">
+            <button type="button" class="btn-primary ai-btn" id="ai-import-copy" data-i18n="aiImport.copy">📋 プロンプトをコピー</button>
+            <span id="ai-import-copy-msg" class="ai-copy-msg" aria-live="polite"></span>
+          </div>
+          <details class="ai-prompt-details">
+            <summary data-i18n="aiImport.showPrompt">プロンプトの中身を見る</summary>
+            <pre id="ai-import-prompt"></pre>
+          </details>
+        </div>
+      </section>
+
+      <section class="ai-step">
+        <div class="ai-step-no">2</div>
+        <div class="ai-step-main">
+          <h4 data-i18n="aiImport.step2">AIを開き、プロンプトと問題の画像を送る</h4>
+          <div class="ai-row" id="ai-import-links"></div>
+          <ul class="ai-tips">
+            <li data-i18n="aiImport.tip1">問題の部分だけを、真上から影が入らないように撮ると正確になります。</li>
+            <li data-i18n="aiImport.tip2">大きい問題は「上のヒント」「左のヒント」に分けて撮り、複数枚まとめて送ってください。</li>
+            <li data-i18n="aiImport.tip3">AIの答えのコードブロックにある「コピー」ボタンで、結果をコピーします。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="ai-step">
+        <div class="ai-step-no">3</div>
+        <div class="ai-step-main">
+          <h4 data-i18n="aiImport.step3">AIの答えを貼り付けて読み込む</h4>
+          <div class="ai-row">
+            <button type="button" class="btn-secondary ai-btn" id="ai-import-paste-btn" data-i18n="aiImport.paste">📥 クリップボードから貼り付け</button>
+          </div>
+          <textarea id="ai-import-text" spellcheck="false" autocomplete="off"
+            placeholder="NONOGRAM&#10;ROWS: 15&#10;COLS: 15&#10;[ROW HINTS]&#10;R1: 3 1&#10;…&#10;[COL HINTS]&#10;C1: 2 2&#10;…"></textarea>
+          <div id="ai-import-result" aria-live="polite"></div>
+        </div>
+      </section>
+    </div>
+    <div id="ai-import-footer">
+      <button type="button" class="btn-primary" id="ai-import-load" disabled data-i18n="aiImport.load">✔ 解答タブに読み込む</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── i18n ── -->
 <script src="i18n/i18n.js"></script>
 <script src="i18n/ja.js"></script>
@@ -580,6 +640,8 @@
 <script src="js/sample-puzzle.js"></script>
 <script src="js/tab.js"></script>
 <script src="js/main.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/ai-import.js"></script>
 
 <!-- ── 問題作成タブ JS ── -->
 <script src="creator/image-proc.js"></script>
