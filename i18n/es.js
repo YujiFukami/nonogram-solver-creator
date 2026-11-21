@@ -1,10 +1,10 @@
 I18n.register('es', {
   // ── Meta / SEO ──
-  'meta.title': 'Nonograma — Solucionador y creador | Crucigrama japonés / Picross',
+  'meta.title': 'Nonograma — Solucionador definitivo y creador | Crucigrama japonés / Picross',
   'meta.description': 'Herramienta automática para resolver y crear nonogramas (crucigrama japonés, picross, ilustlógica). Visualiza la solución paso a paso. También compatible con generación desde códigos QR.',
 
   // ── Común ──
-  'app.title': 'Nonograma — Solucionador',
+  'app.title': 'Nonograma — Solucionador definitivo',
   'app.solveRate': 'Tasa de resolución:',
   'common.rows': 'Filas',
   'common.cols': 'Columnas',

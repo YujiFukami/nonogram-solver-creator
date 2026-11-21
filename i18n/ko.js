@@ -1,10 +1,10 @@
 I18n.register('ko', {
   // ── 메타 / SEO ──
-  'meta.title': '네모로직 자동 풀이 & 만들기 | 노노그램 솔버',
+  'meta.title': '최강 네모로직 자동 풀이 & 만들기 | 노노그램 솔버',
   'meta.description': '네모로직(노노그램·피크로스·네모네모로직) 자동 풀이 및 퍼즐 만들기 도구. 단계별 풀이 시각화 지원. QR코드로 퍼즐 생성도 가능합니다.',
 
   // ── 공통 ──
-  'app.title': '네모로직 자동 풀이',
+  'app.title': '최강 네모로직 자동 풀이',
   'app.solveRate': '풀이율:',
   'common.rows': '행',
   'common.cols': '열',

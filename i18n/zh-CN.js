@@ -1,10 +1,10 @@
 I18n.register('zh-CN', {
   // ── 元信息 / SEO ──
-  'meta.title': '数织解答器 & 出题器 | 逻辑拼图 / Nonogram / Picross',
+  'meta.title': '最强数织解答器 & 出题器 | 逻辑拼图 / Nonogram / Picross',
   'meta.description': '数织（逻辑拼图・以数绘画・Nonogram・Picross）自动解答及出题工具。支持逐步执行以可视化解题过程，还可从QR码生成谜题。',
 
   // ── 通用 ──
-  'app.title': '数织解答器',
+  'app.title': '最强数织解答器',
   'app.solveRate': '解决率:',
   'common.rows': '行',
   'common.cols': '列',

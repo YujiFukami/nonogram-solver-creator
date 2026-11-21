@@ -1,10 +1,10 @@
 I18n.register('it', {
   // ── Meta / SEO ──
-  'meta.title': 'Crucipixel — Risolutore e creatore | Nonogramma / Picross',
+  'meta.title': 'Crucipixel — Risolutore definitivo e creatore | Nonogramma / Picross',
   'meta.description': 'Strumento di risoluzione automatica e creazione di nonogrammi (crucipixel, picross). Visualizza la risoluzione passo dopo passo. Supporta anche la generazione di puzzle da codici QR.',
 
   // ── Comune ──
-  'app.title': 'Crucipixel — Risolutore',
+  'app.title': 'Crucipixel — Risolutore definitivo',
   'app.solveRate': 'Percentuale risolta:',
   'common.rows': 'Righe',
   'common.cols': 'Colonne',

@@ -1,10 +1,10 @@
 I18n.register('pl', {
   // ── Meta / SEO ──
-  'meta.title': 'Nonogram — Solver i kreator | Japońska krzyżówka / Picross',
+  'meta.title': 'Najmocniejszy solver i kreator nonogramów | Japońska krzyżówka / Picross',
   'meta.description': 'Automatyczny solver i kreator nonogramów (japońska krzyżówka, picross, ilustlógica). Wizualizacja rozwiązania krok po kroku. Obsługuje generowanie z kodów QR.',
 
   // ── Wspólne ──
-  'app.title': 'Nonogram — Solver',
+  'app.title': 'Najmocniejszy solver nonogramów',
   'app.solveRate': 'Procent rozwiązania:',
   'common.rows': 'Wiersze',
   'common.cols': 'Kolumny',

@@ -1,10 +1,10 @@
 I18n.register('de', {
   // ── Meta / SEO ──
-  'meta.title': 'Nonogramm Löser & Ersteller | Japanisches Rätsel / Picross',
+  'meta.title': 'Ultimativer Nonogramm-Löser & Ersteller | Japanisches Rätsel / Picross',
   'meta.description': 'Automatischer Nonogramm-Löser und Rätsel-Ersteller (Japanisches Rätsel, Picross). Schrittweise Visualisierung der Lösung. Unterstützt auch die Puzzle-Generierung aus QR-Codes.',
 
   // ── Allgemein ──
-  'app.title': 'Nonogramm Löser',
+  'app.title': 'Ultimativer Nonogramm-Löser',
   'app.solveRate': 'Lösungsrate:',
   'common.rows': 'Zeilen',
   'common.cols': 'Spalten',

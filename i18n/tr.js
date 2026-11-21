@@ -1,10 +1,10 @@
 I18n.register('tr', {
   // ── Meta / SEO ──
-  'meta.title': 'Kare Karalamaca — Çözücü ve oluşturucu | Nonogram / Picross',
+  'meta.title': 'En Güçlü Kare Karalamaca Çözücü ve Oluşturucu | Nonogram / Picross',
   'meta.description': 'Nonogram (Kare Karalamaca, Picross, Japon bulmacası) otomatik çözücü ve oluşturucu. Adım adım çözüm görselleştirmesi. QR kodundan bulmaca oluşturma desteği.',
 
   // ── Ortak ──
-  'app.title': 'Kare Karalamaca Çözücü',
+  'app.title': 'En Güçlü Kare Karalamaca Çözücü',
   'app.solveRate': 'Çözüm oranı:',
   'common.rows': 'Satır',
   'common.cols': 'Sütun',

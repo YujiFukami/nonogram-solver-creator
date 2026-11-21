@@ -1,4 +1,4 @@
-# Nonogram Solver & Creator
+# 最強イラストロジック自動解答 — Ultimate Nonogram Solver & Creator
 
 **お絵かきロジック（イラストロジック・ピクロス・ノノグラム）の自動解答＆問題作成 Web アプリ**
 

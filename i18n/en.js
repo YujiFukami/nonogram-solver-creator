@@ -1,10 +1,10 @@
 I18n.register('en', {
   // ── Meta / SEO ──
-  'meta.title': 'Nonogram Solver & Creator | Picross / Griddlers',
+  'meta.title': 'Ultimate Nonogram Solver & Creator | Picross / Griddlers',
   'meta.description': 'Automatic solver and puzzle creator for nonograms (picross, griddlers, hanjie, paint by numbers, Japanese crossword). Step-by-step visualization of solving logic. Also supports puzzle generation from QR codes.',
 
   // ── Common ──
-  'app.title': 'Nonogram Solver',
+  'app.title': 'Ultimate Nonogram Solver',
   'app.solveRate': 'Solve rate:',
   'common.rows': 'Rows',
   'common.cols': 'Cols',

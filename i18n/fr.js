@@ -1,10 +1,10 @@
 I18n.register('fr', {
   // ── Méta / SEO ──
-  'meta.title': 'Logimage — Solveur et créateur | Nonogramme / Picross',
+  'meta.title': 'Logimage — Solveur ultime et créateur | Nonogramme / Picross',
   'meta.description': 'Outil de résolution automatique et de création de nonogrammes (logimage, picross). Visualisez la résolution pas à pas. Génération de puzzles à partir de QR codes également prise en charge.',
 
   // ── Commun ──
-  'app.title': 'Logimage — Solveur',
+  'app.title': 'Logimage — Solveur ultime',
   'app.solveRate': 'Taux de résolution :',
   'common.rows': 'Lignes',
   'common.cols': 'Colonnes',

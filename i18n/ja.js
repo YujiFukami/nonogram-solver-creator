@@ -1,10 +1,10 @@
 I18n.register('ja', {
   // ── メタ / SEO ──
-  'meta.title': 'イラストロジック 自動解答・作成 | Nonogram Solver',
+  'meta.title': '最強イラストロジック自動解答 | お絵かきロジック・ピクロス 自動解答＆問題作成',
   'meta.description': 'お絵かきロジック（イラストロジック・ピクロス・ノノグラム）の自動解答＆問題作成ツール。ステップ実行で解法を可視化。QRコードからの問題生成にも対応。',
 
   // ── 共通 ──
-  'app.title': 'イラストロジック 自動解答',
+  'app.title': '最強イラストロジック自動解答',
   'app.solveRate': '解決率:',
   'common.rows': '縦',
   'common.cols': '横',

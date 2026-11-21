@@ -1,10 +1,10 @@
 I18n.register('zh-TW', {
   // ── 元資訊 / SEO ──
-  'meta.title': '數織解答器 & 出題器 | 繪畫邏輯 / Nonogram / Picross',
+  'meta.title': '最強數織解答器 & 出題器 | 繪畫邏輯 / Nonogram / Picross',
   'meta.description': '數織（數圖・繪畫邏輯・Nonogram・Picross）自動解答及出題工具。支援逐步執行以視覺化解題過程，亦可從QR碼產生謎題。',
 
   // ── 通用 ──
-  'app.title': '數織解答器',
+  'app.title': '最強數織解答器',
   'app.solveRate': '解決率:',
   'common.rows': '列',
   'common.cols': '欄',
