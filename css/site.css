@@ -62,7 +62,7 @@
 }
 #header-help .hh-menu a:hover { background: #eff6ff; color: var(--color-primary); }
 
-@media (max-width: 1150px) {
+@media (max-width: 1250px) {
   #header-nav a.hn-consult { display: none; }
 }
 @media (max-width: 960px) {
@@ -168,3 +168,11 @@
 }
 .sf-version { margin-top: 10px; font-size: 12px; color: var(--color-muted); }
 .sf-version a { color: var(--color-primary); }
+
+/* ── 左メニューを閉じたときの解答ボタン（盤面の上） ──────── */
+#quick-solve { display: none; gap: 4px; margin-left: auto; flex-shrink: 0; }
+#quick-solve button { width: auto; padding: 5px 12px; font-size: 12px; white-space: nowrap; }
+.side-panel-closed #quick-solve { display: flex; }
+@media (max-width: 700px) {
+  #quick-solve button { padding: 5px 8px; }
+}

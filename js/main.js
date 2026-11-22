@@ -108,6 +108,12 @@ function init() {
 
 // ─── サンプル問題選択 ─────────────────────────────────────
 
+/** サンプル問題の表示名（names があれば表示中の言語、なければ英語、それもなければ name） */
+function sampleName(sample) {
+  const lang = (typeof I18n !== 'undefined') ? I18n.getLang() : 'ja';
+  return (sample.names && (sample.names[lang] || sample.names.en)) || sample.name;
+}
+
 /** サンプル問題をアプリに読み込む */
 function loadSampleByIndex(index) {
   if (typeof SamplePuzzles === 'undefined' || !SamplePuzzles[index]) return;
@@ -131,8 +137,8 @@ function loadSampleByIndex(index) {
   App.hintInput.setHints(rowHints, colHints);
   updateSolveRate(0);
 
-  App.puzzleName = sample.name || 'sample';
-  setStatus(`「${sample.name}」を読み込みました (${rows}×${cols})`, 'success');
+  App.puzzleName = sampleName(sample) || 'sample';
+  setStatus(`「${sampleName(sample)}」を読み込みました (${rows}×${cols})`, 'success');
   autoZoomFit();
 }
 
@@ -179,7 +185,7 @@ function openSampleModal() {
       const item = document.createElement('div');
       item.className = 'sample-item';
       item.innerHTML = `
-        <span class="sample-item-name">${sample.name}</span>
+        <span class="sample-item-name">${sampleName(sample)}</span>
         <span class="sample-item-size">${sample.rows} × ${sample.cols}</span>
       `;
       item.addEventListener('click', () => {
@@ -577,13 +583,15 @@ function finishSolve(result) {
   App.gridCanvas.setGrid(result.grid);
   updateSolveRate(result.solveRate);
 
+  // ヒントに問題があるまま解答した場合は、結果のあとにその旨も残す
+  const warn = App.hintWarning ? ` ／ ${App.hintWarning}` : '';
+  const pct = Math.round(result.solveRate * 100);
   if (result.contradiction) {
-    setStatus(`矛盾を検出しました（ヒントを確認してください）`, 'error');
+    setStatus(`矛盾を検出しました（${pct}% まで確定。ヒントを確認してください）${warn}`, 'error');
   } else if (result.solved) {
-    setStatus(`解答完了！ (${result.iterations}パス)`, 'success');
+    setStatus(`解答完了！ (${result.iterations}パス)${warn}`, warn ? 'error' : 'success');
   } else {
-    const pct = Math.round(result.solveRate * 100);
-    setStatus(`解答一部完了: ${pct}% 確定 (${result.iterations}パス)`, '');
+    setStatus(`解答一部完了: ${pct}% 確定 (${result.iterations}パス)${warn}`, warn ? 'error' : '');
   }
 }
 
@@ -750,36 +758,54 @@ function clearAll() {
 }
 
 // ─── バリデーション ────────────────────────────────────────
+/**
+ * ヒントを確かめる。問題があっても止めずに、内容を見せて「このまま解答するか」を確認する
+ * （AI で読み取った問題などで合計が合わなくても、解けるところまでは解きたいため）
+ * @returns {boolean} 解答を始めてよければ true
+ */
 function validateHints(rowHints, colHints) {
-  // 行ヒントの合計 vs 列ヒントの合計が一致するかチェック
+  const tr = (key, params, fallback) => {
+    if (typeof I18n === 'undefined') return fallback;
+    const s = I18n.t(key, params);
+    return s === key ? fallback : s;
+  };
+  const problems = [];
+
+  // 行ヒントの合計 vs 列ヒントの合計
   const rowSum = rowHints.reduce((s, h) => s + h.reduce((a, b) => a + b, 0), 0);
   const colSum = colHints.reduce((s, h) => s + h.reduce((a, b) => a + b, 0), 0);
-
   if (rowSum !== colSum) {
-    setStatus(`ヒントの合計が一致しません（行: ${rowSum}, 列: ${colSum}）`, 'error');
+    problems.push(tr('solver.warnSum', { r: rowSum, c: colSum },
+      `行ヒントの合計（${rowSum}）と列ヒントの合計（${colSum}）が一致しません`));
+  }
+
+  // 1行（1列）にヒントが収まるか
+  const needed = h => h.reduce((s, v) => s + v, 0) + Math.max(0, h.length - 1);
+  for (let r = 0; r < App.rows; r++) {
+    if (needed(rowHints[r]) > App.cols) {
+      problems.push(tr('solver.warnRow', { n: r + 1, m: App.cols }, `行${r + 1} のヒントがマス数（${App.cols}）に収まりません`));
+    }
+  }
+  for (let c = 0; c < App.cols; c++) {
+    if (needed(colHints[c]) > App.rows) {
+      problems.push(tr('solver.warnCol', { n: c + 1, m: App.rows }, `列${c + 1} のヒントがマス数（${App.rows}）に収まりません`));
+    }
+  }
+
+  App.hintWarning = null;
+  if (!problems.length) return true;
+
+  const shown = problems.slice(0, 5).map(p => '・' + p);
+  if (problems.length > 5) shown.push(`…（ほか ${problems.length - 5} 件）`);
+  const details = shown.join('\n');
+  const ok = confirm(tr('solver.warnConfirm', { details },
+    `ヒントに問題があります。\n\n${details}\n\n最後まで解けない可能性がありますが、このまま解答を始めますか？`));
+  if (!ok) {
+    setStatus(problems[0], 'error');
     return false;
   }
-
-  // 各行ヒントの合計がマス数を超えないかチェック
-  for (let r = 0; r < App.rows; r++) {
-    const h = rowHints[r];
-    const needed = h.reduce((s, v) => s + v, 0) + Math.max(0, h.length - 1);
-    if (needed > App.cols) {
-      setStatus(`行${r + 1} のヒント合計がマス数(${App.cols})を超えています`, 'error');
-      return false;
-    }
-  }
-
-  // 各列ヒントの合計がマス数を超えないかチェック
-  for (let c = 0; c < App.cols; c++) {
-    const h = colHints[c];
-    const needed = h.reduce((s, v) => s + v, 0) + Math.max(0, h.length - 1);
-    if (needed > App.rows) {
-      setStatus(`列${c + 1} のヒント合計がマス数(${App.rows})を超えています`, 'error');
-      return false;
-    }
-  }
-
+  App.hintWarning = tr('solver.warnStatus', { details: problems[0] }, `⚠ ヒントに問題があるまま解答しています（${problems[0]}）`);
+  setStatus(App.hintWarning, 'error');
   return true;
 }
 

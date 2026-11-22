@@ -109,6 +109,8 @@ a { color: var(--primary); }
 .pg-crumbs { font-size: 12px; color: var(--muted); }
 .pg-date { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 8px; }
 .pg-release h2 { margin-top: 26px; }
+.pg-links { list-style: none; padding-left: 0; }
+.pg-links li { padding: 10px 14px; margin: 8px 0; border: 1px solid var(--border); border-radius: 8px; background: #fafafa; }
 .pg-crumbs a { color: var(--muted); }
 .pg-main h1 { font-size: 26px; line-height: 1.4; margin: 6px 0 14px; }
 .pg-main h2 {

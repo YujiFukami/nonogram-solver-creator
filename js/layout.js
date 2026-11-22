@@ -72,6 +72,7 @@ const Layout = (() => {
 
       state.apply = () => {
         panel.classList.toggle('panel-collapsed', state.collapsed);
+        panel.parentElement.classList.toggle('side-panel-closed', state.collapsed);
         btn.classList.toggle('is-collapsed', state.collapsed);
         btn.textContent = state.collapsed ? '▶' : '◀';
         const label = state.collapsed
@@ -178,7 +179,28 @@ const Layout = (() => {
     });
   }
 
+  // ─── 3. 上部の解答ボタン（左メニューのボタンの代わり） ────────
+
+  /** data-proxy="元のボタンのid" のボタンを押すと元のボタンを押し、文字・無効状態・色も元に合わせる */
+  function _initProxyButtons() {
+    document.querySelectorAll('[data-proxy]').forEach(btn => {
+      const target = document.getElementById(btn.dataset.proxy);
+      if (!target) return;
+      btn.removeAttribute('data-i18n');   // 文字は元のボタンに合わせる（言語切替や「自動ステップ ■」も反映）
+      const sync = () => {
+        btn.textContent = target.textContent;
+        btn.disabled = target.disabled;
+        btn.classList.toggle('btn-primary', target.classList.contains('btn-primary'));
+        btn.classList.toggle('btn-secondary', target.classList.contains('btn-secondary'));
+      };
+      btn.addEventListener('click', () => target.click());
+      new MutationObserver(sync).observe(target, { attributes: true, childList: true, characterData: true, subtree: true });
+      sync();
+    });
+  }
+
   function init() {
+    _initProxyButtons();
     _initPanels();
     _initSections();
     _initSolverRefit();

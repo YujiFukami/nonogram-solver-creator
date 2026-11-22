@@ -247,6 +247,20 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/faq/"/>
   </url>
   <url>
+    <loc>https://nonogram-solver-creator.vercel.app/links/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/links/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/links/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/links/"/>
+  </url>
+  <url>
+    <loc>https://nonogram-solver-creator.vercel.app/en/links/</loc>
+    <lastmod>2026-11-22</lastmod>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/links/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/links/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/links/"/>
+  </url>
+  <url>
     <loc>https://nonogram-solver-creator.vercel.app/changelog/</loc>
     <lastmod>2026-11-22</lastmod>
     <xhtml:link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/changelog/"/>

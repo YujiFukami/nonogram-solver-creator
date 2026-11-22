@@ -74,7 +74,7 @@
     "inLanguage": ["ja","en","ru","ko","fr","it","de","es","tr","zh-CN","zh-TW","pl"],
     "browserRequirements": "Requires JavaScript",
     "url": "https://nonogram-solver-creator.vercel.app/es/",
-    "softwareVersion": "2.3.0",
+    "softwareVersion": "2.4.0",
     "author": { "@type": "Organization", "name": "SOFTEX CELWARE", "url": "https://www.softex-celware.com/",
                 "sameAs": ["https://coconala.com/users/737430"] },
     "publisher": { "@type": "Organization", "name": "SOFTEX CELWARE", "url": "https://www.softex-celware.com/" }
@@ -96,12 +96,13 @@
   <header id="header">
     <div id="header-left">
       <h1 data-i18n="app.title">Nonograma — Solucionador definitivo</h1>
-      <a data-nav="changelog" href="en/changelog/" id="app-version" class="app-version" title="更新履歴 / Changelog">v2.3.0</a>
+      <a data-nav="changelog" href="en/changelog/" id="app-version" class="app-version" title="更新履歴 / Changelog">v2.4.0</a>
       <nav id="header-nav" aria-label="Help">
         <a data-nav="app" href="es/" aria-current="page" data-i18n="nav.app">Aplicación</a>
         <a data-nav="guide" href="en/guide/" data-i18n="nav.guide">Cómo usar</a>
         <a data-nav="algorithm" href="en/algorithm/" data-i18n="nav.algorithm">Cómo funciona</a>
         <a data-nav="faq" href="en/faq/" data-i18n="nav.faq">Preguntas frecuentes</a>
+        <a data-nav="links" href="en/links/" data-i18n="nav.links">Revistas de puzles</a>
         <a class="hn-consult" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener" data-i18n="nav.consult">Contrátanos</a>
       </nav>
       <details id="header-help">
@@ -110,6 +111,7 @@
           <a data-nav="guide" href="en/guide/" data-i18n="nav.guide">Cómo usar</a>
           <a data-nav="algorithm" href="en/algorithm/" data-i18n="nav.algorithm">Cómo funciona</a>
           <a data-nav="faq" href="en/faq/" data-i18n="nav.faq">Preguntas frecuentes</a>
+          <a data-nav="links" href="en/links/" data-i18n="nav.links">Revistas de puzles</a>
           <a data-nav="changelog" href="en/changelog/" data-i18n="nav.changelog">Novedades</a>
           <a href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener" data-i18n="nav.consult">Contrátanos</a>
         </div>
@@ -252,6 +254,12 @@
         <input type="text" id="hint-input-field" autocomplete="off" spellcheck="false">
         <span id="hint-input-help" class="hint-input-help" data-i18n="solver.hintHelp">1-2 dígitos→añadir  3+ dígitos→dividir  [.]eliminar último  [..]borrar todo  [0]siguiente  [↑↓]mover</span>
         <span id="hint-input-current"></span>
+        <!-- 左メニューを閉じたときに出す解答ボタン（左メニューのボタンをそのまま押す） -->
+        <div id="quick-solve" role="group" aria-label="Solve">
+          <button type="button" class="btn-primary" data-proxy="btn-solve" data-i18n="solver.run">▶ Ejecutar</button>
+          <button type="button" class="btn-secondary" data-proxy="btn-step" data-i18n="solver.step">⏯ Paso</button>
+          <button type="button" class="btn-secondary" data-proxy="btn-auto-step" data-i18n="solver.auto">⏩ Auto ▶</button>
+        </div>
       </div>
 
       <div id="puzzle-scroll">
@@ -639,7 +647,8 @@
       <a class="sf-text" href="https://www.softex-celware.com/post/nonogram-solver-1" target="_blank" rel="noopener" data-i18n="footer.blog">Blog del algoritmo (japonés)</a>
     </div>
   </div>
-  <p class="sf-version"><span id="footer-version">v2.3.0</span> ・ <a data-nav="changelog" href="en/changelog/" data-i18n="nav.changelog">Novedades</a></p>
+  <p class="sf-version"><span id="footer-version">v2.4.0</span> ・ <a data-nav="changelog" href="en/changelog/" data-i18n="nav.changelog">Novedades</a>
+     ・ <a data-nav="links" href="en/links/" data-i18n="nav.links">Revistas de puzles</a></p>
   <p class="sf-aka">Also known as: Nonogram, Picross, Griddlers, Hanjie, Paint by Numbers, Japanese Crossword,
   お絵かきロジック, イラストロジック, ピクロス, ノノグラム, ロジックアート,
   Японский кроссворд, 네모로직, Logimage, Crucipixel, Nonogramm, Nonograma,

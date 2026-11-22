@@ -26,8 +26,8 @@ const OG_LOCALE = {
   ja: 'ja_JP', en: 'en_US', ru: 'ru_RU', ko: 'ko_KR', fr: 'fr_FR', it: 'it_IT', de: 'de_DE',
   es: 'es_ES', tr: 'tr_TR', 'zh-CN': 'zh_CN', 'zh-TW': 'zh_TW', pl: 'pl_PL',
 };
-const DOC_PAGES = ['guide', 'algorithm', 'faq', 'changelog'];
-const NAV_PAGES = ['guide', 'algorithm', 'faq'];       // ヘッダーに並べるページ（更新履歴はバージョン表示から）
+const DOC_PAGES = ['guide', 'algorithm', 'faq', 'links', 'changelog'];
+const NAV_PAGES = ['guide', 'algorithm', 'faq', 'links'];       // ヘッダーに並べるページ（更新履歴はバージョン表示から）
 const VERSION = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'version.json'), 'utf8'));
 const DOC_LANGS = ['ja', 'en'];
 const TODAY = new Date().toISOString().slice(0, 10);
