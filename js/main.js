@@ -262,21 +262,32 @@ function bindEvents() {
  * DOM レイアウト確定後に測定するため requestAnimationFrame を使用。
  */
 function autoZoomFit() {
-  // 2パスで測定：1回目ズーム後にヒントエリアが再描画されるので2回目で正確に合わせる
+  // ヒント欄の大きさもセルサイズに合わせて変わるため、
+  // 「ヒントの数＋マス数」から見積もったあと、実際の大きさを測って収まるまで小さくする
   const _fit = () => {
-    const scroll        = el.puzzleScroll;
-    const rowHintWidth  = el.rowHintsArea.offsetWidth  || 0;
-    const colHintHeight = el.colHintsArea.offsetHeight || 0;
-    const availW = scroll.clientWidth  - rowHintWidth  - 2;
-    const availH = scroll.clientHeight - colHintHeight - 2;
-    if (availW > 10 && availH > 10) {
-      App.gridCanvas.zoomFit(availW, availH);
+    const scroll = el.puzzleScroll;
+    const layout = document.getElementById('puzzle-layout');
+    if (!scroll || !layout || scroll.clientWidth < 20 || scroll.clientHeight < 20) return false; // 解答タブが非表示
+
+    const st = getComputedStyle(scroll);
+    const availW = scroll.clientWidth  - parseFloat(st.paddingLeft) - parseFloat(st.paddingRight) - 2;
+    const availH = scroll.clientHeight - parseFloat(st.paddingTop)  - parseFloat(st.paddingBottom) - 2;
+
+    const maxLen = hs => Math.max(1, ...hs.map(h => h.length));
+    const hintCols = maxLen(App.hintInput.getRowHints());  // 行ヒントの横の個数
+    const hintRows = maxLen(App.hintInput.getColHints());  // 列ヒントの縦の個数
+    let cs = Math.floor(Math.min(availW / (App.cols + hintCols), availH / (App.rows + hintRows)));
+    cs = Math.max(2, Math.min(40, cs + 2));                // 少し大きめから始めて縮める
+
+    App.gridCanvas.setCellSize(cs);
+    for (let i = 0; i < 40 && cs > 2 && (layout.offsetWidth > availW || layout.offsetHeight > availH); i++) {
+      cs--;
+      App.gridCanvas.setCellSize(cs);
     }
+    return true;
   };
-  requestAnimationFrame(() => {
-    _fit();                          // 1パス目（ヒントエリアが旧サイズ）
-    requestAnimationFrame(_fit);     // 2パス目（ヒントエリアが新セルサイズに合わせ再描画後）
-  });
+  // 表示が切り替わった直後でも測れるよう、描画を待ってから合わせる
+  requestAnimationFrame(() => { if (!_fit()) requestAnimationFrame(_fit); });
 }
 
 // ─── サイズ変更 ────────────────────────────────────────────
@@ -306,6 +317,7 @@ function applySize() {
   App.hintInput.setCellSize(App.gridCanvas.cellSize);
   updateSolveRate(0);
   setStatus(`サイズを ${newRows}×${newCols} に変更しました`);
+  autoZoomFit();
 }
 
 // ─── ファイル読み込み ─────────────────────────────────────

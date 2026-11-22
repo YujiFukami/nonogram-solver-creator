@@ -340,6 +340,7 @@ const QrCreator = (() => {
       if (typeof updateSolveRate === 'function') updateSolveRate(0);
       if (typeof setStatus === 'function') setStatus('QRコードの問題をセットしました', 'success');
       if (typeof switchTab === 'function') switchTab('solver');
+      if (typeof autoZoomFit === 'function') autoZoomFit();   // 問題全体が見える大きさに合わせる
     }
   }
 
