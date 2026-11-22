@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How it works: the nonogram solving algorithm | Ultimate Nonogram Solver</title>
+  <meta name="description" content="How the Ultimate Nonogram Solver solves nonograms with pure logic and no guessing: line solving with pattern matrices, matrix-based speed-ups, dynamic programming, probing, and generating uniquely solvable puzzles from photos and QR codes.">
+  <meta name="author" content="SOFTEX CELWARE">
+  <link rel="canonical" href="https://nonogram-solver-creator.vercel.app/en/algorithm/">
+  <link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/algorithm/">
+  <link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/algorithm/">
+  <link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/algorithm/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://nonogram-solver-creator.vercel.app/en/algorithm/">
+  <meta property="og:title" content="How it works: the nonogram solving algorithm | Ultimate Nonogram Solver">
+  <meta property="og:description" content="How the Ultimate Nonogram Solver solves nonograms with pure logic and no guessing: line solving with pattern matrices, matrix-based speed-ups, dynamic programming, probing, and generating uniquely solvable puzzles from photos and QR codes.">
+  <meta property="og:image" content="https://nonogram-solver-creator.vercel.app/img/og-image.png">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
+  <link rel="stylesheet" href="../../css/pages.css">
+  <script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Ultimate Nonogram Solver",
+        "item": "https://nonogram-solver-creator.vercel.app/en/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "How it works: the solving algorithm",
+        "item": "https://nonogram-solver-creator.vercel.app/en/algorithm/"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "How it works: the solving algorithm",
+    "description": "How the Ultimate Nonogram Solver solves nonograms with pure logic and no guessing: line solving with pattern matrices, matrix-based speed-ups, dynamic programming, probing, and generating uniquely solvable puzzles from photos and QR codes.",
+    "inLanguage": "en",
+    "url": "https://nonogram-solver-creator.vercel.app/en/algorithm/",
+    "author": {
+      "@type": "Organization",
+      "name": "SOFTEX CELWARE",
+      "url": "https://www.softex-celware.com/"
+    }
+  }
+]
+  </script>
+</head>
+<body>
+  <!-- アプリと同じヘッダー（今いるページを強調） -->
+  <header class="pg-header">
+    <div class="pg-left">
+      <a class="pg-brand" href="../../en/">Ultimate Nonogram Solver</a>
+      <a class="pg-version" href="../../en/changelog/" title="Changelog">v2.3.0</a>
+      <nav class="pg-nav" aria-label="Help">
+        <a href="../../en/">Solver</a>
+        <a href="../../en/guide/">How to use</a>
+        <a href="../../en/algorithm/" aria-current="page">How it works</a>
+        <a href="../../en/faq/">FAQ</a>
+        <a class="pg-consult" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">Hire us</a>
+      </nav>
+    </div>
+    <div class="pg-right">
+      <a class="pg-lang" href="../../algorithm/" hreflang="ja" lang="ja">日本語</a>
+      <a class="pg-logo" href="https://www.softex-celware.com/" target="_blank" rel="noopener" title="SOFTEX CELWARE"><img src="../../img/softex-celware-logo.svg" alt="SOFTEX CELWARE"></a>
+    </div>
+  </header>
+
+  <main class="pg-main">
+    <nav class="pg-crumbs"><a href="../../en/">Ultimate Nonogram Solver</a> › <span>How it works: the solving algorithm</span></nav>
+    <h1>How it works: the solving algorithm</h1>
+<p class="pg-lead">The solver started as an Excel VBA program and was rebuilt for the web. It solves puzzles with pure logic, the way a human does, and never uses guessing or backtracking. This page explains the idea and the additions made for the web version.</p>
+
+<nav class="pg-toc">
+  <a href="#rule">1. Rules and approach</a>
+  <a href="#line">2. Solving a single line (pattern matrix)</a>
+  <a href="#matrix">3. Speeding it up with matrix operations</a>
+  <a href="#web">4. The web implementation</a>
+  <a href="#probe">5. Probing</a>
+  <a href="#generate">6. Generating uniquely solvable puzzles</a>
+  <a href="#ai">7. Importing from images with AI</a>
+</nav>
+
+<h2 id="rule">1. Rules and approach</h2>
+<p>In a nonogram, the numbers next to each row and above each column give the lengths of the runs of black cells in that line, in order, with at least one white cell between runs.</p>
+<p>Each cell is unknown, black or white. The solver looks at one line at a time and fixes the cells that are <strong>black in every possible arrangement</strong> or <strong>white in every possible arrangement</strong>, then repeats over all rows and columns until nothing changes.</p>
+
+<h2 id="line">2. Solving a single line (pattern matrix)</h2>
+<p>The single-line method is explained with figures in the (Japanese) blog post "<a href="https://www.softex-celware.com/post/nonogram-solver-1" target="_blank" rel="noopener">Nonogram solving algorithm, chapter 1</a>":</p>
+<ul>
+  <li><strong>First pass:</strong> list every placement of the clues as a "pattern matrix" and fix the cells common to all patterns (e.g. clues 3 2 1 in 10 cells).</li>
+  <li><strong>Updates:</strong> when other lines fix black or white cells, drop the patterns that contradict them and fix the cells common to the remaining patterns.</li>
+  <li><strong>Runs of black cells:</strong> narrow down which clue a run of connected black cells can belong to, using the run and the cells at both ends.</li>
+</ul>
+
+<h2 id="matrix">3. Speeding it up with matrix operations</h2>
+<p>"<a href="https://www.softex-celware.com/post/nonogram-solver-2" target="_blank" rel="noopener">Chapter 2</a>" encodes the states as numbers (white = 0, unknown = 1, black = 2) and filters patterns with matrix products and sums. Helper matrices for invalidating patterns and for finding start and end positions are prepared once and reused, which makes the VBA version fast.</p>
+
+<h2 id="web">4. The web implementation</h2>
+<ul>
+  <li><strong>Forward/backward dynamic programming:</strong> instead of listing all patterns, the web version computes, from both ends of the line, how many clues can be placed up to each cell, and derives whether each cell can be black and whether it can be white. The cost is about (cells × clues), so even a 300-cell line is instant.</li>
+  <li><strong>Overall loop:</strong> rows and columns are solved alternately; whenever a cell is fixed, the crossing lines are solved again.</li>
+  <li><strong>Responsive UI:</strong> solving runs in a Web Worker, so the page never freezes, and a step-by-step mode visualizes the process.</li>
+</ul>
+
+<h2 id="probe">5. Probing</h2>
+<p>When line logic gets stuck, the solver picks an unknown cell and solves its line twice: once assuming black and once assuming white. Cells that come out the same in both cases are fixed; if one assumption leads to a contradiction, the other one is correct. If two rounds make no progress, the solver stops. Because it never chains guesses, it also tells you whether a puzzle can be solved by logic alone.</p>
+
+<h2 id="generate">6. Generating uniquely solvable puzzles</h2>
+<p>Turning a photo or QR code straight into black and white usually gives a puzzle without a unique solution. Instead of repairing such puzzles afterwards, the app <strong>generates many candidates that look (or mean) the same, measures how much of each one the solver can solve, and picks the best</strong>.</p>
+<ul>
+  <li><strong>Photos:</strong> over 100 combinations of threshold, 3×3 median smoothing, closing and noise removal are tried. In tests with 30 photo/size cases (30–150 columns), 29 had settings that were uniquely solvable as is, and the last one needed a single cell change.</li>
+  <li><strong>QR codes:</strong> the same URL can be encoded with 8 mask patterns, 4 error-correction levels and an optional <code>#1</code>–<code>#15</code> suffix — all opening the same page. Hundreds of variants are generated, and the chosen one is verified by actually decoding it with jsQR. A solvable QR code was found for all 7 URLs tested.</li>
+</ul>
+
+<h2 id="ai">7. Importing from images with AI</h2>
+<p>Puzzle images are read by the user's own AI (ChatGPT, Gemini, Claude, …). The dedicated prompt asks for a <strong>line-numbered format</strong> (<code>R1: 3 1</code>, <code>C1: 2 2</code>), which prevents the AI from skipping or shifting lines. The pasted data is checked automatically: number of lines, whether each line's clues fit, and whether the row and column totals match.</p>
+
+<h2>About the developer</h2>
+<p>This app is developed by SOFTEX CELWARE (Japan). We build Excel VBA business tools, web apps, and image and data processing automation — feel free to contact us about similar projects.</p>
+    <p class="pg-cta"><a class="pg-btn pg-primary" href="../../en/">▶ Open the solver (free)</a></p>
+  </main>
+
+  <footer class="pg-footer">
+    <p><strong>This tool is developed by SOFTEX CELWARE.</strong> We build Excel VBA tools, web apps and business automation. Feel free to contact us.</p>
+    <p class="pg-footer-links">
+      <a class="pg-btn pg-primary" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">Contact</a>
+      <a class="pg-btn" href="https://coconala.com/users/737430" target="_blank" rel="noopener">Hire on Coconala</a>
+      <a class="pg-btn" href="https://www.softex-celware.com/" target="_blank" rel="noopener">Company site</a>
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使い方 | 最強イラストロジック自動解答（お絵かきロジック・ピクロス 自動解答）</title>
+  <meta name="description" content="最強イラストロジック自動解答の使い方。ヒントを入力して自動で解く方法、問題の画像をAIで読み込む方法、写真やQRコードから解けるお絵かきロジックを作る方法を、画面つきで説明します。">
+  <meta name="author" content="SOFTEX CELWARE">
+  <link rel="canonical" href="https://nonogram-solver-creator.vercel.app/guide/">
+  <link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/guide/">
+  <link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/guide/">
+  <link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/guide/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://nonogram-solver-creator.vercel.app/guide/">
+  <meta property="og:title" content="使い方 | 最強イラストロジック自動解答（お絵かきロジック・ピクロス 自動解答）">
+  <meta property="og:description" content="最強イラストロジック自動解答の使い方。ヒントを入力して自動で解く方法、問題の画像をAIで読み込む方法、写真やQRコードから解けるお絵かきロジックを作る方法を、画面つきで説明します。">
+  <meta property="og:image" content="https://nonogram-solver-creator.vercel.app/img/og-image.png">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/pages.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "最強イラストロジック自動解答",
+      "item": "https://nonogram-solver-creator.vercel.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "使い方",
+      "item": "https://nonogram-solver-creator.vercel.app/guide/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <!-- アプリと同じヘッダー（今いるページを強調） -->
+  <header class="pg-header">
+    <div class="pg-left">
+      <a class="pg-brand" href="../">最強イラストロジック自動解答</a>
+      <a class="pg-version" href="../changelog/" title="更新履歴">v2.3.0</a>
+      <nav class="pg-nav" aria-label="Help">
+        <a href="../">アプリ</a>
+        <a href="../guide/" aria-current="page">使い方</a>
+        <a href="../algorithm/">技術解説</a>
+        <a href="../faq/">よくある質問</a>
+        <a class="pg-consult" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">開発のご相談</a>
+      </nav>
+    </div>
+    <div class="pg-right">
+      <a class="pg-lang" href="../en/guide/" hreflang="en" lang="en">English</a>
+      <a class="pg-logo" href="https://www.softex-celware.com/" target="_blank" rel="noopener" title="SOFTEX CELWARE"><img src="../img/softex-celware-logo.svg" alt="SOFTEX CELWARE"></a>
+    </div>
+  </header>
+
+  <main class="pg-main">
+    <nav class="pg-crumbs"><a href="../">最強イラストロジック自動解答</a> › <span>使い方</span></nav>
+    <h1>使い方</h1>
+<p class="pg-lead">「最強イラストロジック自動解答」は、お絵かきロジック（イラストロジック・ピクロス・ノノグラム）を自動で解いたり、写真やQRコードから問題を作ったりできる無料のWebアプリです。インストールは不要で、ブラウザだけで動きます。入力した問題や画像はお使いのブラウザの中だけで処理され、サーバーには送られません。</p>
+
+<nav class="pg-toc">
+  <a href="#solve">1. 問題を解く</a>
+  <a href="#import">2. 問題を読み込む（ファイル・サンプル・画像からAI）</a>
+  <a href="#create">3. 写真から問題を作る</a>
+  <a href="#qr">4. QRコードから問題を作る</a>
+  <a href="#save">5. 保存と印刷</a>
+</nav>
+
+<h2 id="solve">1. 問題を解く</h2>
+<figure><img src="../img/guide/solver.png" alt="解答タブで問題を自動で解いた画面" loading="lazy" width="1366" height="800"><figcaption>解答タブ：ヒントを入力して「解答実行」を押すと、自動で解けます。</figcaption></figure>
+<ol>
+  <li>左のメニューの「サイズ設定」で、縦と横のマス数を入れて「適用」を押します（最大300×300）。</li>
+  <li>盤面の上の入力欄に、1行目のヒントから順に入力します。数字はスペースで区切り、<kbd>Enter</kbd> で確定します。</li>
+  <li>入力のきまり：1〜2桁の数字はそのまま1つのヒント、3桁以上の数字は1桁ずつに分けて追加（例：<code>312</code> → 3・1・2）、<code>.</code> で末尾を1つ削除、<code>..</code> でその行を全部消す、<code>0</code> で次の行へ、<kbd>↑</kbd><kbd>↓</kbd> で行を移動します。ヒントのマスをクリックして、その行や列に移ることもできます。</li>
+  <li>行・列すべて入力したら「▶ 解答実行」。「⏯ ステップ」で1手ずつ、「⏩ 自動」で一定の間隔で進めて、解き方を目で追うこともできます。</li>
+</ol>
+<p class="pg-note">このアプリは人が解くときと同じ論理だけで解き、当てずっぽう（仮置きのやり直し）はしません。最後まで埋まらない場合は、問題の答えが1つに決まらないか、ヒントの入力に誤りがある可能性があります。</p>
+
+<h2 id="import">2. 問題を読み込む</h2>
+<ul>
+  <li><strong>ファイル：</strong>「📂 読込」で、保存した問題（.txt）を開けます。</li>
+  <li><strong>サンプル：</strong>「📋 サンプルから選ぶ」で、すぐに試せる問題を読み込めます。</li>
+  <li><strong>画像からAIで読込：</strong>雑誌の問題をスマホで撮ったりスキャンしたりした画像を、お使いのAI（ChatGPT・Gemini・Claude など）に読ませて、ヒントを自動で入力できます。</li>
+</ul>
+<figure><img src="../img/guide/ai-import.png" alt="画像からAIで問題を読み込むダイアログ" loading="lazy" width="1366" height="800"><figcaption>「📷 画像からAIで読込」：プロンプトをコピー → AIに画像と一緒に送る → 答えを貼り付けて読み込みます。</figcaption></figure>
+<ol>
+  <li>「📷 画像からAIで読込」を押し、「📋 プロンプトをコピー」を押します。</li>
+  <li>ChatGPT・Gemini・Claude のどれかを開き、コピーしたプロンプトと問題の画像を送ります。大きい問題は「上のヒント」と「左のヒント」に分けて撮ると正確になります。</li>
+  <li>AIが返したコードブロックをコピーし、アプリの欄に貼り付けます。行数・列数の過不足や、行と列のヒントの合計が合っているかを自動で確かめ、問題があれば該当する行を示します。</li>
+  <li>「✔ 解答タブに読み込む」で解答タブに入ります。</li>
+</ol>
+<p class="pg-note">AIは各自のアカウントで使うため、このアプリの利用料はかかりません。50×45 の雑誌の問題で、読み取ったデータから最後まで解けることを確かめています。</p>
+
+<h2 id="create">3. 写真から問題を作る</h2>
+<figure><img src="../img/guide/creator.png" alt="問題作成タブで解ける設定を探した画面" loading="lazy" width="1366" height="800"><figcaption>問題作成タブ：「🔎 解ける設定を探す」で、答えが1つに決まる問題になる設定を自動で探します。</figcaption></figure>
+<ol>
+  <li>「問題作成」タブで「📂 画像を選択」から写真を読み込みます（ドラッグ＆ドロップも可）。元画像の上の枠で使う範囲を決めます。</li>
+  <li>「グリッド」で横のマス数を決めます（縦は自動）。最初は 30〜60 マスがおすすめです。</li>
+  <li>「🔎 解ける設定を探す」を押すと、しきい値・ならしなどの組み合わせを自動で試し、<strong>答えが1つに決まる問題</strong>になる候補を小さな絵で並べます。クリックで切り替えて、写真らしく見えるものを選びます。</li>
+  <li>盤面をクリック・ドラッグすると、マスを手で直せます。直したら「解の検証」で、答えが1つに決まるか確かめます。</li>
+  <li>「➡ 解答タブへ渡す」「💾 .txt」「🖨 印刷用PDF」で出力します。</li>
+</ol>
+<p class="pg-note">コツ：ディザ（点描）や輪郭の方式は、答えが1つに決まりにくい傾向があります。明暗のはっきりした写真（シルエット・逆光など）ほど、写真らしい問題になります。</p>
+
+<h2 id="qr">4. QRコードから問題を作る</h2>
+<figure><img src="../img/guide/qr.png" alt="QRコードタブで解けるQRを探した画面" loading="lazy" width="1366" height="800"><figcaption>QRコードタブ：解き終わると、そのままスマホで読み取れるQRコードになる問題を作れます。</figcaption></figure>
+<ol>
+  <li>「QRコード」タブでURLを入力します。</li>
+  <li>「🔎 解けるQRを探す」を押すと、同じ内容のQRコードを数百通り作り、<strong>答えが1つに決まり、実際に読み取れる</strong>ものを選びます。読み取りは、作ったQRコードを画像にして確認しています。</li>
+  <li>「URLの末尾に #数字 を付けてよい」をオンにすると、見つかりやすくなります（開くページは同じです）。</li>
+  <li>「解答タブへ渡す」や「🖨 印刷用PDF」で出力します。イベントやチラシの謎解きにも使えます。</li>
+</ol>
+
+<h2 id="save">5. 保存と印刷</h2>
+<ul>
+  <li>「💾 保存」：ヒントを .txt で保存します（Excel VBA 版と同じ形式）。</li>
+  <li>「🖼 画像として保存」：盤面を PNG で保存します。「ヒント数字を含む」をオンにすると、問題用紙のような画像になります。</li>
+  <li>「🖨 印刷用PDF」（問題作成・QR）：用紙の向きを自動で選んで、印刷用の問題を作ります。</li>
+  <li>左のメニューは「◀」でたためます。画面の広さを解答に使えます。</li>
+</ul>
+<p>対応言語：日本語・英語・中国語（簡体字・繁体字）・韓国語・フランス語・ドイツ語・イタリア語・スペイン語・ロシア語・トルコ語・ポーランド語の12言語。パソコン・スマホ・タブレットのブラウザで使えます。</p>
+    <p class="pg-cta"><a class="pg-btn pg-primary" href="../">▶ アプリを使う（無料）</a></p>
+  </main>
+
+  <footer class="pg-footer">
+    <p><strong>このツールは SOFTEX CELWARE が開発しました。</strong> Excel VBA・Webアプリ・業務効率化ツールの開発を承ります。お気軽にご相談ください。</p>
+    <p class="pg-footer-links">
+      <a class="pg-btn pg-primary" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">お問い合わせ</a>
+      <a class="pg-btn" href="https://coconala.com/users/737430" target="_blank" rel="noopener">ココナラで依頼する</a>
+      <a class="pg-btn" href="https://www.softex-celware.com/" target="_blank" rel="noopener">会社サイト</a>
+    </p>
+  </footer>
+</body>
+</html>

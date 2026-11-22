@@ -75,19 +75,70 @@ const I18n = (() => {
     if (title && title !== 'meta.title') document.title = title;
   }
 
-  /** 初期化: localStorage or ブラウザ言語から自動判定 */
-  function init() {
-    const saved = localStorage.getItem('i18n-lang');
-    if (saved && _locales[saved]) {
-      setLang(saved);
-      return;
-    }
-    // ブラウザ言語から自動判定
-    const nav = (navigator.language || '').toLowerCase();
-    const match = available().find(l => nav.startsWith(l.toLowerCase()))
-               || available().find(l => nav.startsWith(l.split('-')[0]));
-    setLang(match || 'ja');
+  // ─── 言語別 URL ───────────────────────────────────────────
+  //   日本語は /、ほかの言語は /en/ /ko/ … （tools/build-pages.js が生成）
+  //   言語ページには <base href="../"> があるので、相対 URL はどのページからでもサイトの先頭を基準に解決される
+
+  /** ページ自体の言語（<html lang>） */
+  function pageLang() {
+    const l = document.documentElement.getAttribute('lang') || 'ja';
+    return _locales[l] ? l : 'ja';
   }
 
-  return { register, available, getLang, setLang, t, applyToDOM, init };
+  /** その言語のページの URL */
+  function urlFor(lang) {
+    return new URL(lang === 'ja' ? './' : lang + '/', document.baseURI).href;
+  }
+
+  /** 言語セレクタから: 選んだ言語を覚えて、その言語のページへ移動 */
+  function goToLang(lang) {
+    if (!_locales[lang]) return;
+    try { localStorage.setItem('i18n-lang', lang); } catch (e) { /* 保存できなくても移動する */ }
+    if (lang === pageLang()) { setLang(lang); return; }
+    location.href = urlFor(lang);
+  }
+
+  /** 利用者の言語（選んだことがあればそれ、なければブラウザの言語） */
+  function _preferredLang() {
+    try {
+      const saved = localStorage.getItem('i18n-lang');
+      if (saved && _locales[saved]) return saved;
+    } catch (e) { /* なし */ }
+    const nav = (navigator.language || '').toLowerCase();
+    return available().find(l => nav.startsWith(l.toLowerCase()))
+        || available().find(l => nav.startsWith(l.split('-')[0]))
+        || null;
+  }
+
+  /** 利用者の言語とページの言語が違うとき、案内バーを出す（自動では移動しない） */
+  function _showSuggestion() {
+    const bar = document.getElementById('lang-suggest');
+    if (!bar) return;
+    const want = _preferredLang();
+    if (!want || want === pageLang()) return;
+    try { if (localStorage.getItem('i18n-suggest-closed') === want) return; } catch (e) { /* なし */ }
+    const dict = _locales[want] || {};
+    document.getElementById('lang-suggest-text').textContent = dict['lang.suggest'] || '';
+    const link = document.getElementById('lang-suggest-link');
+    link.textContent = dict['lang.open'] || want;
+    link.href = urlFor(want);
+    link.lang = want;
+    link.addEventListener('click', () => { try { localStorage.setItem('i18n-lang', want); } catch (e) { /* なし */ } });
+    document.getElementById('lang-suggest-close').addEventListener('click', () => {
+      bar.hidden = true;
+      try { localStorage.setItem('i18n-suggest-closed', want); } catch (e) { /* なし */ }
+    });
+    bar.hidden = false;
+  }
+
+  /** 初期化: いつもページ自体の言語で表示する（URL ごとに言語が決まる） */
+  function init() {
+    _lang = pageLang();
+    applyToDOM();
+    _updateTitle();
+    document.dispatchEvent(new CustomEvent('langchange', { detail: { lang: _lang } }));
+    _showSuggestion();
+  }
+
+  return { register, available, getLang, setLang, t, applyToDOM, init, pageLang, urlFor, goToLang };
 })();

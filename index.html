@@ -16,12 +16,34 @@
   <!-- SEO メタタグ -->
   <meta name="description" content="お絵かきロジック（イラストロジック・ピクロス・ノノグラム）の自動解答＆問題作成ツール。Nonogram / Picross / Griddlers solver and puzzle creator with step-by-step visualization.">
   <meta name="keywords" content="nonogram,picross,griddlers,hanjie,お絵かきロジック,イラストロジック,ピクロス,ノノグラム,paint by numbers,Japanese crossword,solver,creator,ロジックアート,nemo logic,crucipixel,logimage,japonský křížovky,japanisches rätsel">
-  <meta name="author" content="Nonogram Solver">
+  <meta name="author" content="SOFTEX CELWARE">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="">
+  <link rel="canonical" href="https://nonogram-solver-creator.vercel.app/">
+  <!-- hreflang:start（tools/build-pages.js が自動で書き換えます） -->
+  <link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/">
+  <link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/">
+  <link rel="alternate" hreflang="ru" href="https://nonogram-solver-creator.vercel.app/ru/">
+  <link rel="alternate" hreflang="ko" href="https://nonogram-solver-creator.vercel.app/ko/">
+  <link rel="alternate" hreflang="fr" href="https://nonogram-solver-creator.vercel.app/fr/">
+  <link rel="alternate" hreflang="it" href="https://nonogram-solver-creator.vercel.app/it/">
+  <link rel="alternate" hreflang="de" href="https://nonogram-solver-creator.vercel.app/de/">
+  <link rel="alternate" hreflang="es" href="https://nonogram-solver-creator.vercel.app/es/">
+  <link rel="alternate" hreflang="tr" href="https://nonogram-solver-creator.vercel.app/tr/">
+  <link rel="alternate" hreflang="zh-CN" href="https://nonogram-solver-creator.vercel.app/zh-CN/">
+  <link rel="alternate" hreflang="zh-TW" href="https://nonogram-solver-creator.vercel.app/zh-TW/">
+  <link rel="alternate" hreflang="pl" href="https://nonogram-solver-creator.vercel.app/pl/">
+  <link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/">
+  <!-- hreflang:end -->
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nonogram-solver-creator.vercel.app/">
+  <meta property="og:site_name" content="最強イラストロジック自動解答">
+  <meta property="og:image" content="https://nonogram-solver-creator.vercel.app/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://nonogram-solver-creator.vercel.app/img/og-image.png">
   <meta property="og:title" content="最強イラストロジック自動解答 | Ultimate Nonogram Solver & Creator">
   <meta property="og:description" content="Free online nonogram (picross/griddlers) solver and puzzle creator. お絵かきロジック・イラストロジック自動解答＆作成ツール。">
   <meta property="og:locale" content="ja_JP">
@@ -49,7 +71,12 @@
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
     "inLanguage": ["ja","en","ru","ko","fr","it","de","es","tr","zh-CN","zh-TW","pl"],
-    "browserRequirements": "Requires JavaScript"
+    "browserRequirements": "Requires JavaScript",
+    "url": "https://nonogram-solver-creator.vercel.app/",
+    "softwareVersion": "2.3.0",
+    "author": { "@type": "Organization", "name": "SOFTEX CELWARE", "url": "https://www.softex-celware.com/",
+                "sameAs": ["https://coconala.com/users/737430"] },
+    "publisher": { "@type": "Organization", "name": "SOFTEX CELWARE", "url": "https://www.softex-celware.com/" }
   }
   </script>
 
@@ -59,13 +86,34 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/ai-import.css">
   <link rel="stylesheet" href="css/puzzle-search.css">
+  <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
 <div id="app">
 
   <!-- ヘッダー -->
   <header id="header">
-    <h1 data-i18n="app.title">最強イラストロジック自動解答</h1>
+    <div id="header-left">
+      <h1 data-i18n="app.title">最強イラストロジック自動解答</h1>
+      <a data-nav="changelog" href="changelog/" id="app-version" class="app-version" title="更新履歴 / Changelog">v2.3.0</a>
+      <nav id="header-nav" aria-label="Help">
+        <a data-nav="app" href="./" aria-current="page" data-i18n="nav.app">アプリ</a>
+        <a data-nav="guide" href="guide/" data-i18n="nav.guide">使い方</a>
+        <a data-nav="algorithm" href="algorithm/" data-i18n="nav.algorithm">技術解説</a>
+        <a data-nav="faq" href="faq/" data-i18n="nav.faq">よくある質問</a>
+        <a class="hn-consult" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener" data-i18n="nav.consult">開発のご相談</a>
+      </nav>
+      <details id="header-help">
+        <summary aria-label="Help">📖</summary>
+        <div class="hh-menu">
+          <a data-nav="guide" href="guide/" data-i18n="nav.guide">使い方</a>
+          <a data-nav="algorithm" href="algorithm/" data-i18n="nav.algorithm">技術解説</a>
+          <a data-nav="faq" href="faq/" data-i18n="nav.faq">よくある質問</a>
+          <a data-nav="changelog" href="changelog/" data-i18n="nav.changelog">更新履歴</a>
+          <a href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener" data-i18n="nav.consult">開発のご相談</a>
+        </div>
+      </details>
+    </div>
     <div id="header-right">
       <a href="https://www.softex-celware.com/" target="_blank" rel="noopener" id="header-logo-link" title="SOFTEX CELWARE">
         <img src="img/softex-celware-logo.svg" alt="SOFTEX CELWARE" id="header-logo-img">
@@ -74,6 +122,13 @@
       <div id="solve-rate-display"><span data-i18n="app.solveRate">解決率:</span> 0%</div>
     </div>
   </header>
+
+  <!-- 言語の案内（i18n.js が必要なときだけ表示） -->
+  <div id="lang-suggest" hidden>
+    <span id="lang-suggest-text"></span>
+    <a id="lang-suggest-link" href="./"></a>
+    <button type="button" id="lang-suggest-close" aria-label="close">✕</button>
+  </div>
 
   <!-- プログレスバー -->
   <div id="progress-bar-wrap">
@@ -576,8 +631,19 @@
 </div>
 
 <!-- SEO: ページ下部にキーワード含む非表示テキスト -->
-<footer id="seo-footer" style="padding:12px 16px;font-size:11px;color:#999;text-align:center;border-top:1px solid #eee;margin-top:20px;">
-  <p>Also known as: Nonogram, Picross, Griddlers, Hanjie, Paint by Numbers, Japanese Crossword,
+<footer id="site-footer">
+  <div class="sf-dev">
+    <p><strong data-i18n="footer.dev">このツールは SOFTEX CELWARE が開発しました。</strong>
+       <span data-i18n="footer.offer">Excel VBA・Webアプリ・業務効率化ツールの開発を承ります。お気軽にご相談ください。</span></p>
+    <div class="sf-links">
+      <a class="sf-btn sf-primary" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener" data-i18n="footer.contact">お問い合わせ</a>
+      <a class="sf-btn" href="https://coconala.com/users/737430" target="_blank" rel="noopener" data-i18n="footer.coconala">ココナラで依頼する</a>
+      <a class="sf-btn" href="https://www.softex-celware.com/" target="_blank" rel="noopener" data-i18n="footer.site">会社サイト</a>
+      <a class="sf-text" href="https://www.softex-celware.com/post/nonogram-solver-1" target="_blank" rel="noopener" data-i18n="footer.blog">アルゴリズム解説ブログ</a>
+    </div>
+  </div>
+  <p class="sf-version"><span id="footer-version">v2.3.0</span> ・ <a data-nav="changelog" href="changelog/" data-i18n="nav.changelog">更新履歴</a></p>
+  <p class="sf-aka">Also known as: Nonogram, Picross, Griddlers, Hanjie, Paint by Numbers, Japanese Crossword,
   お絵かきロジック, イラストロジック, ピクロス, ノノグラム, ロジックアート,
   Японский кроссворд, 네모로직, Logimage, Crucipixel, Nonogramm, Nonograma,
   Kare Karalamaca, 数织, 數織, Malowane Liczbami</p>
@@ -726,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
       opt.textContent = opt.value; // fallback
     });
 
-    sel.addEventListener('change', () => I18n.setLang(sel.value));
+    sel.addEventListener('change', () => I18n.goToLang(sel.value));
   }
 
   // i18n 初期化

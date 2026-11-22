@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to use | Ultimate Nonogram Solver &amp; Creator (Picross / Griddlers)</title>
+  <meta name="description" content="How to use the Ultimate Nonogram Solver: enter clues and solve nonograms automatically, import a puzzle from a photo with your own AI, and create uniquely solvable nonograms from photos or QR codes.">
+  <meta name="author" content="SOFTEX CELWARE">
+  <link rel="canonical" href="https://nonogram-solver-creator.vercel.app/en/guide/">
+  <link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/guide/">
+  <link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/guide/">
+  <link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/guide/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://nonogram-solver-creator.vercel.app/en/guide/">
+  <meta property="og:title" content="How to use | Ultimate Nonogram Solver &amp; Creator (Picross / Griddlers)">
+  <meta property="og:description" content="How to use the Ultimate Nonogram Solver: enter clues and solve nonograms automatically, import a puzzle from a photo with your own AI, and create uniquely solvable nonograms from photos or QR codes.">
+  <meta property="og:image" content="https://nonogram-solver-creator.vercel.app/img/og-image.png">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
+  <link rel="stylesheet" href="../../css/pages.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Ultimate Nonogram Solver",
+      "item": "https://nonogram-solver-creator.vercel.app/en/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "How to use",
+      "item": "https://nonogram-solver-creator.vercel.app/en/guide/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <!-- アプリと同じヘッダー（今いるページを強調） -->
+  <header class="pg-header">
+    <div class="pg-left">
+      <a class="pg-brand" href="../../en/">Ultimate Nonogram Solver</a>
+      <a class="pg-version" href="../../en/changelog/" title="Changelog">v2.3.0</a>
+      <nav class="pg-nav" aria-label="Help">
+        <a href="../../en/">Solver</a>
+        <a href="../../en/guide/" aria-current="page">How to use</a>
+        <a href="../../en/algorithm/">How it works</a>
+        <a href="../../en/faq/">FAQ</a>
+        <a class="pg-consult" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">Hire us</a>
+      </nav>
+    </div>
+    <div class="pg-right">
+      <a class="pg-lang" href="../../guide/" hreflang="ja" lang="ja">日本語</a>
+      <a class="pg-logo" href="https://www.softex-celware.com/" target="_blank" rel="noopener" title="SOFTEX CELWARE"><img src="../../img/softex-celware-logo.svg" alt="SOFTEX CELWARE"></a>
+    </div>
+  </header>
+
+  <main class="pg-main">
+    <nav class="pg-crumbs"><a href="../../en/">Ultimate Nonogram Solver</a> › <span>How to use</span></nav>
+    <h1>How to use</h1>
+<p class="pg-lead">The Ultimate Nonogram Solver is a free web app that solves nonograms (also known as picross, griddlers, hanjie or paint by numbers) automatically, and creates new puzzles from photos and QR codes. Nothing to install: it runs in your browser, and your puzzles and images are processed locally and never sent to a server.</p>
+
+<nav class="pg-toc">
+  <a href="#solve">1. Solve a puzzle</a>
+  <a href="#import">2. Load a puzzle (file, samples, image via AI)</a>
+  <a href="#create">3. Create a puzzle from a photo</a>
+  <a href="#qr">4. Create a puzzle from a QR code</a>
+  <a href="#save">5. Save and print</a>
+</nav>
+
+<h2 id="solve">1. Solve a puzzle</h2>
+<figure><img src="../../img/guide/solver.png" alt="The solver tab after solving a nonogram" loading="lazy" width="1366" height="800"><figcaption>Solver tab: enter the clues and press "Solve".</figcaption></figure>
+<ol>
+  <li>Set the number of rows and columns under "Grid Size" and press "Apply" (up to 300 × 300).</li>
+  <li>Type the clues into the input field above the grid, starting with row 1. Separate numbers with spaces and press <kbd>Enter</kbd>.</li>
+  <li>Input rules: a 1–2 digit number is one clue, a number with 3+ digits is split into single digits (<code>312</code> → 3, 1, 2), <code>.</code> deletes the last clue, <code>..</code> clears the line, <code>0</code> moves to the next line, and <kbd>↑</kbd><kbd>↓</kbd> move between lines. You can also click a clue cell to jump to that line.</li>
+  <li>Press "▶ Solve". Use "⏯ Step" or "⏩ Auto" to watch the solving process step by step.</li>
+</ol>
+<p class="pg-note">The solver uses pure logic, just like a human, and never guesses. If some cells stay undecided, either the puzzle does not have a unique solution or a clue was entered incorrectly.</p>
+
+<h2 id="import">2. Load a puzzle</h2>
+<ul>
+  <li><strong>File:</strong> "📂 Load" opens a saved puzzle (.txt).</li>
+  <li><strong>Samples:</strong> "📋 Select sample" loads a built-in puzzle.</li>
+  <li><strong>Import from image (AI):</strong> photograph or scan a puzzle from a magazine and let your own AI (ChatGPT, Gemini, Claude, …) read the clues for you.</li>
+</ul>
+<figure><img src="../../img/guide/ai-import.png" alt="The dialog for importing a puzzle from an image with AI" loading="lazy" width="1366" height="800"><figcaption>Import from image: copy the prompt, send it with the image to your AI, then paste the answer.</figcaption></figure>
+<ol>
+  <li>Press "Import from image (AI)" and then "Copy prompt".</li>
+  <li>Open ChatGPT, Gemini or Claude and send the prompt together with the puzzle image. For large puzzles, photograph the top clues and the left clues separately.</li>
+  <li>Copy the code block from the AI's answer and paste it into the app. The app checks the number of rows and columns and whether the row and column totals match, and points to any suspicious line.</li>
+  <li>Press "Load into solver".</li>
+</ol>
+
+<h2 id="create">3. Create a puzzle from a photo</h2>
+<figure><img src="../../img/guide/creator.png" alt="The creator tab after finding solvable settings" loading="lazy" width="1366" height="800"><figcaption>Creator tab: "Find solvable settings" searches for settings that give a puzzle with a unique solution.</figcaption></figure>
+<ol>
+  <li>Open the "Creator" tab and press "📂 Select Image" (drag and drop works too). Adjust the crop frame on the original image.</li>
+  <li>Set the number of columns (rows follow the aspect ratio). 30–60 columns is a good start.</li>
+  <li>Press "Find solvable settings". The app tries many combinations of threshold, smoothing and clean-up, and shows thumbnails of candidates that are <strong>uniquely solvable</strong>. Click one that looks most like your photo.</li>
+  <li>Click or drag on the grid to edit cells by hand, then press "Validate solution" to check that the solution is still unique.</li>
+  <li>Use "➡ Send to Solver", "💾 .txt" or "🖨 Print PDF".</li>
+</ol>
+<p class="pg-note">Tip: dithering and outline modes rarely give a unique solution. Photos with clear contrast (silhouettes, backlight) make the best puzzles.</p>
+
+<h2 id="qr">4. Create a puzzle from a QR code</h2>
+<figure><img src="../../img/guide/qr.png" alt="The QR code tab after finding a solvable QR code" loading="lazy" width="1366" height="800"><figcaption>QR code tab: once solved, the picture is a QR code you can scan with your phone.</figcaption></figure>
+<ol>
+  <li>Enter a URL on the "QR Code" tab.</li>
+  <li>Press "Find a solvable QR". The app builds hundreds of QR codes with the same content and picks one that is <strong>uniquely solvable and still scans</strong> — each candidate is verified by actually decoding it.</li>
+  <li>Allowing a "#number" at the end of the URL makes it easier to find one (the same page opens).</li>
+  <li>Use "Send to Solver" or "🖨 Print PDF" — great for events and puzzle hunts.</li>
+</ol>
+
+<h2 id="save">5. Save and print</h2>
+<ul>
+  <li>"💾 Save" stores the clues as .txt (the same format as the Excel VBA version).</li>
+  <li>"🖼 Save as Image" exports the grid as PNG, optionally with clue numbers ("Include hint numbers").</li>
+  <li>"🖨 Print PDF" (Creator and QR Code tabs) prints the puzzle with automatic page orientation.</li>
+  <li>Collapse the left menu with "◀" to give the grid more room.</li>
+</ul>
+<p>Available in 12 languages: English, Japanese, Chinese (Simplified and Traditional), Korean, French, German, Italian, Spanish, Russian, Turkish and Polish. Works in browsers on PCs, phones and tablets.</p>
+    <p class="pg-cta"><a class="pg-btn pg-primary" href="../../en/">▶ Open the solver (free)</a></p>
+  </main>
+
+  <footer class="pg-footer">
+    <p><strong>This tool is developed by SOFTEX CELWARE.</strong> We build Excel VBA tools, web apps and business automation. Feel free to contact us.</p>
+    <p class="pg-footer-links">
+      <a class="pg-btn pg-primary" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">Contact</a>
+      <a class="pg-btn" href="https://coconala.com/users/737430" target="_blank" rel="noopener">Hire on Coconala</a>
+      <a class="pg-btn" href="https://www.softex-celware.com/" target="_blank" rel="noopener">Company site</a>
+    </p>
+  </footer>
+</body>
+</html>

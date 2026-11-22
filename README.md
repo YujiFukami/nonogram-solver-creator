@@ -58,7 +58,11 @@ Free online nonogram (picross / griddlers / hanjie) solver and puzzle creator wi
 
 ## Demo / デモ
 
-**[https://yujifukami.github.io/nonogram-solver-creator/](https://yujifukami.github.io/nonogram-solver-creator/)**
+**[https://nonogram-solver-creator.vercel.app/](https://nonogram-solver-creator.vercel.app/)**
+
+- 使い方 / How to use: [日本語](https://nonogram-solver-creator.vercel.app/guide/) ・ [English](https://nonogram-solver-creator.vercel.app/en/guide/)
+- 技術解説 / How it works: [日本語](https://nonogram-solver-creator.vercel.app/algorithm/) ・ [English](https://nonogram-solver-creator.vercel.app/en/algorithm/)
+- よくある質問 / FAQ: [日本語](https://nonogram-solver-creator.vercel.app/faq/) ・ [English](https://nonogram-solver-creator.vercel.app/en/faq/)
 
 ---
 
@@ -75,7 +79,7 @@ Free online nonogram (picross / griddlers / hanjie) solver and puzzle creator wi
 ## Getting Started / 使い方
 
 ### Online
-Visit the [demo site](https://yujifukami.github.io/nonogram-solver-creator/).
+Visit the [web app](https://nonogram-solver-creator.vercel.app/).
 
 ### Local
 ```bash
@@ -90,6 +94,24 @@ npx serve web -p 5501
 ```
 
 No build step required — just serve the `web/` directory.
+
+### Static pages for search engines / 検索エンジン向けページの生成
+
+`index.html`・`i18n/*.js`・`content/` を変更したら、次を実行してからコミットしてください。
+
+```bash
+node tools/build-pages.js
+```
+
+- `/{lang}/index.html`（en, ko, zh-CN … 11言語）: 各言語の文字を書き込んだアプリページ（`<base href="../">` で同じ JS/CSS を使う）
+- `index.html` の hreflang、解説ページ `/guide/` `/algorithm/` `/faq/`（日本語）と `/en/…`（英語、本文は `content/`）
+- `sitemap.xml`・`robots.txt`
+
+### Version / バージョン
+
+- 現在のバージョンは `version.json` で管理します（画面のタイトル横・フッター・構造化データに自動で反映）。
+- 更新時は `version.json` を上げ、`content/ja/changelog.html` と `content/en/changelog.html` に追記してから `node tools/build-pages.js` を実行します。
+- Excel VBA 版（ver1.011 まで）の続きとして、Web 版は v2.0.0（2026-04-16）から始まっています。
 
 ---
 

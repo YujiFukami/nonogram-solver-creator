@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>更新履歴 | 最強イラストロジック自動解答</title>
+  <meta name="description" content="最強イラストロジック自動解答（お絵かきロジック・ピクロス自動解答 Web アプリ）の更新履歴。バージョンごとの追加機能と改善点。">
+  <meta name="author" content="SOFTEX CELWARE">
+  <link rel="canonical" href="https://nonogram-solver-creator.vercel.app/changelog/">
+  <link rel="alternate" hreflang="ja" href="https://nonogram-solver-creator.vercel.app/changelog/">
+  <link rel="alternate" hreflang="en" href="https://nonogram-solver-creator.vercel.app/en/changelog/">
+  <link rel="alternate" hreflang="x-default" href="https://nonogram-solver-creator.vercel.app/changelog/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://nonogram-solver-creator.vercel.app/changelog/">
+  <meta property="og:title" content="更新履歴 | 最強イラストロジック自動解答">
+  <meta property="og:description" content="最強イラストロジック自動解答（お絵かきロジック・ピクロス自動解答 Web アプリ）の更新履歴。バージョンごとの追加機能と改善点。">
+  <meta property="og:image" content="https://nonogram-solver-creator.vercel.app/img/og-image.png">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/pages.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "最強イラストロジック自動解答",
+      "item": "https://nonogram-solver-creator.vercel.app/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "更新履歴",
+      "item": "https://nonogram-solver-creator.vercel.app/changelog/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <!-- アプリと同じヘッダー（今いるページを強調） -->
+  <header class="pg-header">
+    <div class="pg-left">
+      <a class="pg-brand" href="../">最強イラストロジック自動解答</a>
+      <a class="pg-version" href="../changelog/" aria-current="page" title="更新履歴">v2.3.0</a>
+      <nav class="pg-nav" aria-label="Help">
+        <a href="../">アプリ</a>
+        <a href="../guide/">使い方</a>
+        <a href="../algorithm/">技術解説</a>
+        <a href="../faq/">よくある質問</a>
+        <a class="pg-consult" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">開発のご相談</a>
+      </nav>
+    </div>
+    <div class="pg-right">
+      <a class="pg-lang" href="../en/changelog/" hreflang="en" lang="en">English</a>
+      <a class="pg-logo" href="https://www.softex-celware.com/" target="_blank" rel="noopener" title="SOFTEX CELWARE"><img src="../img/softex-celware-logo.svg" alt="SOFTEX CELWARE"></a>
+    </div>
+  </header>
+
+  <main class="pg-main">
+    <nav class="pg-crumbs"><a href="../">最強イラストロジック自動解答</a> › <span>更新履歴</span></nav>
+    <h1>更新履歴</h1>
+<p class="pg-lead">「最強イラストロジック自動解答」の更新内容です。Excel VBA 版（ver1.011 まで）を引き継ぎ、Web 版はバージョン 2 から始まっています。</p>
+
+<section class="pg-release">
+  <h2 id="v2.3.0">v2.3.0 <span class="pg-date">2026-11-23</span></h2>
+  <ul>
+    <li>12言語それぞれのページ（/en/・/ko/・/zh-CN/ など）を用意し、各国の検索で見つかりやすくしました。</li>
+    <li>解説ページ「<a href="../guide/">使い方</a>」「<a href="../algorithm/">技術解説</a>」「<a href="../faq/">よくある質問</a>」と、この更新履歴を追加しました（日本語・英語）。</li>
+    <li>画面上部にバージョンと解説ページへのリンクを表示し、今どのページにいるかがわかるようにしました。</li>
+    <li>ブラウザの言語と違う言語のページを開いたとき、その言語のページを案内するようにしました。</li>
+    <li>開発元の紹介と、お問い合わせ・ココナラへのリンクを追加しました。</li>
+  </ul>
+</section>
+
+<section class="pg-release">
+  <h2 id="v2.2.0">v2.2.0 <span class="pg-date">2026-11-22</span></h2>
+  <ul>
+    <li>問題作成タブに「🔎 解ける設定を探す」を追加。写真から、答えが1つに決まる問題になる設定を自動で探し、候補を並べます。</li>
+    <li>QRコードタブに「🔎 解けるQRを探す」を追加。答えが1つに決まり、実際に読み取れるQRコードを自動で選びます。</li>
+    <li>変換の設定に「ならし」を追加し、ディザ・輪郭を選んだときに注意を表示するようにしました。</li>
+    <li>日本語などを含む文字をQRコードにすると、読み取り時に文字化けする不具合を直しました。</li>
+    <li>アプリ名を「最強イラストロジック自動解答」に変更しました。</li>
+  </ul>
+</section>
+
+<section class="pg-release">
+  <h2 id="v2.1.0">v2.1.0 <span class="pg-date">2026-11-21</span></h2>
+  <ul>
+    <li>「📷 画像からAIで読込」を追加。雑誌の問題の写真を ChatGPT・Gemini・Claude などに読ませ、貼り付けるだけで入力できます。</li>
+    <li>左のメニューをたためるようにし、区画ごとの折りたたみ、よく使うボタンの常時表示に対応しました。</li>
+    <li>問題作成タブで、区切り線のドラッグに合わせてプレビュー画像の大きさも変わるようにし、生成した問題を表示領域いっぱいに自動拡大するようにしました。</li>
+    <li>スマホ幅のレイアウトを整えました。</li>
+  </ul>
+</section>
+
+<section class="pg-release">
+  <h2 id="v2.0.0">v2.0.0 <span class="pg-date">2026-04-16</span></h2>
+  <ul>
+    <li>Web 版を公開。Excel VBA 版の自動解答アルゴリズムを JavaScript に移植しました（当てずっぽうなしの論理だけで解く）。</li>
+    <li>ステップ実行での解き方の表示、.txt の読み込み・保存、画像としての保存に対応しました。</li>
+    <li>写真から問題を作る「問題作成」、QRコードから問題を作る「QRコード」タブを搭載しました。</li>
+    <li>12言語に対応し、サンプル問題を追加しました。</li>
+  </ul>
+</section>
+    <p class="pg-cta"><a class="pg-btn pg-primary" href="../">▶ アプリを使う（無料）</a></p>
+  </main>
+
+  <footer class="pg-footer">
+    <p><strong>このツールは SOFTEX CELWARE が開発しました。</strong> Excel VBA・Webアプリ・業務効率化ツールの開発を承ります。お気軽にご相談ください。</p>
+    <p class="pg-footer-links">
+      <a class="pg-btn pg-primary" href="https://www.softex-celware.com/contact-3" target="_blank" rel="noopener">お問い合わせ</a>
+      <a class="pg-btn" href="https://coconala.com/users/737430" target="_blank" rel="noopener">ココナラで依頼する</a>
+      <a class="pg-btn" href="https://www.softex-celware.com/" target="_blank" rel="noopener">会社サイト</a>
+    </p>
+  </footer>
+</body>
+</html>

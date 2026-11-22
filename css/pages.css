@@ -1,0 +1,208 @@
+/* ══════════════════════════════════════════════════════════
+   pages.css — 解説ページ（使い方・技術解説・よくある質問）
+   ══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --bg: #f5f5f5;
+}
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.8;
+  font-size: 15px;
+}
+a { color: var(--primary); }
+
+/* ヘッダー（アプリ画面のヘッダーと同じ見た目。今いるページを白で強調） */
+.pg-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.pg-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.pg-brand {
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: .03em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.pg-version {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.18);
+  margin-left: -8px;
+  white-space: nowrap;
+}
+.pg-version:hover { background: rgba(255,255,255,.3); }
+.pg-version[aria-current="page"] { background: #fff; color: var(--primary); }
+.pg-nav { display: flex; align-items: center; gap: 4px; }
+.pg-nav a {
+  color: #fff;
+  opacity: .85;
+  font-size: 12px;
+  line-height: 1.6;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.pg-nav a:hover { opacity: 1; background: rgba(255,255,255,.15); }
+.pg-nav a[aria-current="page"] { opacity: 1; background: #fff; color: var(--primary); font-weight: 700; }
+.pg-nav a.pg-consult { opacity: 1; border: 1px solid rgba(255,255,255,.55); }
+.pg-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.pg-lang {
+  color: #fff;
+  font-size: 11px;
+  text-decoration: none;
+  padding: 2px 10px;
+  border: 1px solid rgba(255,255,255,.45);
+  border-radius: 3px;
+  background: rgba(255,255,255,.15);
+}
+.pg-lang:hover { background: rgba(255,255,255,.25); }
+.pg-logo { display: inline-flex; opacity: .85; }
+.pg-logo:hover { opacity: 1; }
+.pg-logo img { height: 18px; filter: brightness(1.8) saturate(.8); }
+
+@media (max-width: 1100px) {
+  .pg-nav a.pg-consult { display: none; }
+}
+@media (max-width: 900px) {
+  .pg-header { flex-wrap: wrap; padding: 6px 12px; row-gap: 4px; }
+  .pg-left { flex-wrap: wrap; row-gap: 4px; }
+  .pg-nav { order: 3; width: 100%; overflow-x: auto; }
+  .pg-logo { display: none; }
+}
+
+/* 本文 */
+.pg-main {
+  max-width: 860px;
+  margin: 24px auto;
+  padding: 24px 28px 32px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.pg-crumbs { font-size: 12px; color: var(--muted); }
+.pg-date { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 8px; }
+.pg-release h2 { margin-top: 26px; }
+.pg-crumbs a { color: var(--muted); }
+.pg-main h1 { font-size: 26px; line-height: 1.4; margin: 6px 0 14px; }
+.pg-main h2 {
+  font-size: 20px;
+  margin: 34px 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #dbeafe;
+  scroll-margin-top: 12px;
+}
+.pg-lead { font-size: 16px; }
+.pg-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 14px 0 6px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.pg-note {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+figure { margin: 14px 0; }
+figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+figcaption { font-size: 13px; color: var(--muted); margin-top: 4px; }
+code, kbd {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+ol, ul { padding-left: 1.4em; }
+li { margin: 4px 0; }
+
+/* よくある質問 */
+details.faq {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 10px 0;
+  background: #fff;
+}
+details.faq > summary {
+  cursor: pointer;
+  padding: 12px 16px;
+  font-weight: 700;
+  list-style: none;
+}
+details.faq > summary::before { content: 'Q. '; color: var(--primary); }
+details.faq > summary::-webkit-details-marker { display: none; }
+details.faq[open] > summary { border-bottom: 1px solid var(--border); }
+.faq-a { padding: 4px 16px 6px; }
+
+/* ボタン */
+.pg-cta { text-align: center; margin-top: 30px; }
+.pg-btn {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  margin: 3px;
+}
+.pg-btn:hover { border-color: var(--primary); color: var(--primary); }
+.pg-btn.pg-primary { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 700; }
+.pg-btn.pg-primary:hover { background: var(--primary-hover); color: #fff; }
+
+/* フッター */
+.pg-footer {
+  text-align: center;
+  padding: 20px 16px 30px;
+  font-size: 14px;
+  color: var(--text);
+}
+.pg-footer-links { margin-top: 8px; }
+
+@media (max-width: 700px) {
+  body { font-size: 14px; }
+  .pg-main { margin: 0; border-radius: 0; padding: 16px; box-shadow: none; }
+  .pg-main h1 { font-size: 22px; }
+}
